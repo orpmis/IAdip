@@ -1,0 +1,34 @@
+﻿<Window x:Class="InstaArt.FolderCreate"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InstaArt"
+        mc:Ignorable="d"
+        Title="FolderCreate" Height="235.2" Width="462.8">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="FolderName"
+                 Height="40"
+                 Width="200"
+                 HorizontalAlignment="Left"
+                 Margin="15,0,0,0"/>
+        <Button x:Name="Create" Click="Create_Click"
+                Height="40"
+                Width="50"
+                HorizontalAlignment="Right"
+                Content=">>"
+                Margin="0,0,30,0"/>
+        <ComboBox Name="FolderPlace"
+                  Margin="10"
+                  Grid.Row="1"
+                  Height="40"
+                  Width="200"
+                  SelectedValuePath="id"
+                  DisplayMemberPath="name"
+                  SelectedIndex="0"/>
+    </Grid>
+</Window>

@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Хранилище InstaArtModelContainer" CdmEntityContainer="InstaArtEntities">
+    <EntitySetMapping Name="comments">
+      <EntityTypeMapping TypeName="InstaArtModel.comments">
+        <MappingFragment StoreEntitySet="comments">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="id_photo" ColumnName="id_photo" />
+          <ScalarProperty Name="id_user" ColumnName="id_user" />
+          <ScalarProperty Name="message" ColumnName="message" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="group">
+      <EntityTypeMapping TypeName="InstaArtModel.group">
+        <MappingFragment StoreEntitySet="group">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="short_descp" ColumnName="short_descp" />
+          <ScalarProperty Name="preview" ColumnName="preview" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="group_photo">
+      <EntityTypeMapping TypeName="InstaArtModel.group_photo">
+        <MappingFragment StoreEntitySet="group_photo">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="id_group" ColumnName="id_group" />
+          <ScalarProperty Name="id_photo" ColumnName="id_photo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="likes">
+      <EntityTypeMapping TypeName="InstaArtModel.likes">
+        <MappingFragment StoreEntitySet="likes">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="id_user" ColumnName="id_user" />
+          <ScalarProperty Name="id_photo" ColumnName="id_photo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="photos">
+      <EntityTypeMapping TypeName="InstaArtModel.photos">
+        <MappingFragment StoreEntitySet="photos">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="address" ColumnName="address" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="owner" ColumnName="owner" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="subs">
+      <EntityTypeMapping TypeName="InstaArtModel.subs">
+        <MappingFragment StoreEntitySet="subs">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="id_user" ColumnName="id_user" />
+          <ScalarProperty Name="id_group" ColumnName="id_group" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="InstaArtModel.sysdiagrams">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="user_credentials">
+      <EntityTypeMapping TypeName="InstaArtModel.user_credentials">
+        <MappingFragment StoreEntitySet="user_credentials">
+          <ScalarProperty Name="id_user" ColumnName="id_user" />
+          <ScalarProperty Name="credentials" ColumnName="credentials" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="users">
+      <EntityTypeMapping TypeName="InstaArtModel.users">
+        <MappingFragment StoreEntitySet="users">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="nickname" ColumnName="nickname" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="avatar" ColumnName="avatar" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="users_photo">
+      <EntityTypeMapping TypeName="InstaArtModel.users_photo">
+        <MappingFragment StoreEntitySet="users_photo">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="id_user" ColumnName="id_user" />
+          <ScalarProperty Name="id_photo" ColumnName="id_photo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

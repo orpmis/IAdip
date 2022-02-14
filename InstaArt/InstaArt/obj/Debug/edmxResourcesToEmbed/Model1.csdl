@@ -1,0 +1,502 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="comments">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_photo" Type="Int32" />
+    <Property Name="id_user" Type="Int32" />
+    <Property Name="message" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="photos" Relationship="Self.FK_comments_photos" FromRole="comments" ToRole="photos" />
+    <NavigationProperty Name="users" Relationship="Self.FK_comments_users" FromRole="comments" ToRole="users" />
+  </EntityType>
+  <EntityType Name="group">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="short_descp" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="preview" Type="Int32" />
+    <Property Name="registration" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="group_photo" Relationship="Self.FK_group_group_photo" FromRole="group" ToRole="group_photo" />
+    <NavigationProperty Name="group_photo1" Relationship="Self.FK_group_photo_group" FromRole="group" ToRole="group_photo" />
+    <NavigationProperty Name="subs" Relationship="Self.FK_subs_group" FromRole="group" ToRole="subs" />
+  </EntityType>
+  <EntityType Name="group_photo">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_group" Type="Int32" Nullable="false" />
+    <Property Name="id_photo" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="group" Relationship="Self.FK_group_group_photo" FromRole="group_photo" ToRole="group" />
+    <NavigationProperty Name="group1" Relationship="Self.FK_group_photo_group" FromRole="group_photo" ToRole="group" />
+    <NavigationProperty Name="photos" Relationship="Self.FK_group_photo_photos" FromRole="group_photo" ToRole="photos" />
+  </EntityType>
+  <EntityType Name="likes">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_user" Type="Int32" />
+    <Property Name="id_photo" Type="Int32" />
+    <NavigationProperty Name="photos" Relationship="Self.FK_likes_photos" FromRole="likes" ToRole="photos" />
+    <NavigationProperty Name="users" Relationship="Self.FK_likes_users" FromRole="likes" ToRole="users" />
+  </EntityType>
+  <EntityType Name="photos">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="description" Type="String" MaxLength="3500" FixedLength="false" Unicode="true" />
+    <Property Name="date" Type="DateTime" Precision="0" />
+    <Property Name="owner" Type="Int32" />
+    <Property Name="isFolder" Type="Byte" />
+    <Property Name="root" Type="Int32" />
+    <NavigationProperty Name="comments" Relationship="Self.FK_comments_photos" FromRole="photos" ToRole="comments" />
+    <NavigationProperty Name="group_photo" Relationship="Self.FK_group_photo_photos" FromRole="photos" ToRole="group_photo" />
+    <NavigationProperty Name="likes" Relationship="Self.FK_likes_photos" FromRole="photos" ToRole="likes" />
+    <NavigationProperty Name="photos1" Relationship="Self.FK_photos_photos" FromRole="photos" ToRole="photos1" />
+    <NavigationProperty Name="photos2" Relationship="Self.FK_photos_photos" FromRole="photos1" ToRole="photos" />
+    <NavigationProperty Name="photos_tags" Relationship="Self.FK_photos_tags_photos" FromRole="photos" ToRole="photos_tags" />
+    <NavigationProperty Name="users" Relationship="Self.FK_photos_users" FromRole="photos" ToRole="users" />
+    <NavigationProperty Name="users_photo" Relationship="Self.FK_users_photo_photos" FromRole="photos" ToRole="users_photo" />
+  </EntityType>
+  <EntityType Name="photos_tags">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_tag" Type="Int32" Nullable="false" />
+    <Property Name="id_photo" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="photos" Relationship="Self.FK_photos_tags_photos" FromRole="photos_tags" ToRole="photos" />
+    <NavigationProperty Name="tags" Relationship="Self.FK_photos_tags_tags" FromRole="photos_tags" ToRole="tags" />
+  </EntityType>
+  <EntityType Name="roles">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="subs" Relationship="Self.FK_subs_roles" FromRole="roles" ToRole="subs" />
+  </EntityType>
+  <EntityType Name="subs">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_user" Type="Int32" Nullable="false" />
+    <Property Name="id_group" Type="Int32" Nullable="false" />
+    <Property Name="id_role" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="group" Relationship="Self.FK_subs_group" FromRole="subs" ToRole="group" />
+    <NavigationProperty Name="roles" Relationship="Self.FK_subs_roles" FromRole="subs" ToRole="roles" />
+    <NavigationProperty Name="users" Relationship="Self.FK_subs_users" FromRole="subs" ToRole="users" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="tags">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="photos_tags" Relationship="Self.FK_photos_tags_tags" FromRole="tags" ToRole="photos_tags" />
+    <NavigationProperty Name="users_tags" Relationship="Self.FK_users_tags_tags" FromRole="tags" ToRole="users_tags" />
+  </EntityType>
+  <EntityType Name="users">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nickname" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="status" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="avatar" Type="Int32" />
+    <Property Name="registration" Type="DateTime" Precision="0" />
+    <Property Name="last_online" Type="DateTime" Precision="3" />
+    <Property Name="isOnline" Type="Byte" />
+    <NavigationProperty Name="comments" Relationship="Self.FK_comments_users" FromRole="users" ToRole="comments" />
+    <NavigationProperty Name="likes" Relationship="Self.FK_likes_users" FromRole="users" ToRole="likes" />
+    <NavigationProperty Name="photos" Relationship="Self.FK_photos_users" FromRole="users" ToRole="photos" />
+    <NavigationProperty Name="subs" Relationship="Self.FK_subs_users" FromRole="users" ToRole="subs" />
+    <NavigationProperty Name="users_photo" Relationship="Self.FK_users_photo_users" FromRole="users" ToRole="users_photo" />
+    <NavigationProperty Name="users_tags" Relationship="Self.FK_users_tags_users" FromRole="users" ToRole="users_tags" />
+    <NavigationProperty Name="users_photo1" Relationship="Self.FK_users_users_photo" FromRole="users" ToRole="users_photo" />
+  </EntityType>
+  <EntityType Name="users_photo">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_user" Type="Int32" Nullable="false" />
+    <Property Name="id_photo" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="photos" Relationship="Self.FK_users_photo_photos" FromRole="users_photo" ToRole="photos" />
+    <NavigationProperty Name="users" Relationship="Self.FK_users_photo_users" FromRole="users_photo" ToRole="users" />
+    <NavigationProperty Name="users1" Relationship="Self.FK_users_users_photo" FromRole="users_photo" ToRole="users" />
+  </EntityType>
+  <EntityType Name="users_tags">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_tag" Type="Int32" Nullable="false" />
+    <Property Name="id_user" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="tags" Relationship="Self.FK_users_tags_tags" FromRole="users_tags" ToRole="tags" />
+    <NavigationProperty Name="users" Relationship="Self.FK_users_tags_users" FromRole="users_tags" ToRole="users" />
+  </EntityType>
+  <Association Name="FK_comments_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="comments" Type="Self.comments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="comments">
+        <PropertyRef Name="id_photo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_comments_users">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="comments" Type="Self.comments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="comments">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_group_group_photo">
+    <End Role="group_photo" Type="Self.group_photo" Multiplicity="0..1" />
+    <End Role="group" Type="Self.group" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="group_photo">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="group">
+        <PropertyRef Name="preview" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_group_photo_group">
+    <End Role="group" Type="Self.group" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="group_photo" Type="Self.group_photo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="group">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="group_photo">
+        <PropertyRef Name="id_group" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_subs_group">
+    <End Role="group" Type="Self.group" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="subs" Type="Self.subs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="group">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="subs">
+        <PropertyRef Name="id_group" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_group_photo_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="group_photo" Type="Self.group_photo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="group_photo">
+        <PropertyRef Name="id_photo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_likes_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="likes" Type="Self.likes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="likes">
+        <PropertyRef Name="id_photo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_likes_users">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="likes" Type="Self.likes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="likes">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_photos_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="0..1" />
+    <End Role="photos1" Type="Self.photos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="photos1">
+        <PropertyRef Name="root" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_photos_tags_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="photos_tags" Type="Self.photos_tags" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="photos_tags">
+        <PropertyRef Name="id_photo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_photos_users">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="photos" Type="Self.photos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="photos">
+        <PropertyRef Name="owner" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_users_photo_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="users_photo" Type="Self.users_photo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="users_photo">
+        <PropertyRef Name="id_photo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_photos_tags_tags">
+    <End Role="tags" Type="Self.tags" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="photos_tags" Type="Self.photos_tags" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tags">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="photos_tags">
+        <PropertyRef Name="id_tag" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_subs_roles">
+    <End Role="roles" Type="Self.roles" Multiplicity="1" />
+    <End Role="subs" Type="Self.subs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="roles">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="subs">
+        <PropertyRef Name="id_role" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_subs_users">
+    <End Role="users" Type="Self.users" Multiplicity="1" />
+    <End Role="subs" Type="Self.subs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="subs">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_users_tags_tags">
+    <End Role="tags" Type="Self.tags" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="users_tags" Type="Self.users_tags" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tags">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="users_tags">
+        <PropertyRef Name="id_tag" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_users_photo_users">
+    <End Role="users" Type="Self.users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="users_photo" Type="Self.users_photo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="users_photo">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_users_tags_users">
+    <End Role="users" Type="Self.users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="users_tags" Type="Self.users_tags" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="users_tags">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_users_users_photo">
+    <End Role="users_photo" Type="Self.users_photo" Multiplicity="0..1" />
+    <End Role="users" Type="Self.users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users_photo">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="users">
+        <PropertyRef Name="avatar" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MyAppET2" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="comments" EntityType="Self.comments" />
+    <EntitySet Name="group" EntityType="Self.group" />
+    <EntitySet Name="group_photo" EntityType="Self.group_photo" />
+    <EntitySet Name="likes" EntityType="Self.likes" />
+    <EntitySet Name="photos" EntityType="Self.photos" />
+    <EntitySet Name="photos_tags" EntityType="Self.photos_tags" />
+    <EntitySet Name="roles" EntityType="Self.roles" />
+    <EntitySet Name="subs" EntityType="Self.subs" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="tags" EntityType="Self.tags" />
+    <EntitySet Name="users" EntityType="Self.users" />
+    <EntitySet Name="users_photo" EntityType="Self.users_photo" />
+    <EntitySet Name="users_tags" EntityType="Self.users_tags" />
+    <AssociationSet Name="FK_comments_photos" Association="Self.FK_comments_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="comments" EntitySet="comments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_comments_users" Association="Self.FK_comments_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="comments" EntitySet="comments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_group_group_photo" Association="Self.FK_group_group_photo">
+      <End Role="group_photo" EntitySet="group_photo" />
+      <End Role="group" EntitySet="group" />
+    </AssociationSet>
+    <AssociationSet Name="FK_group_photo_group" Association="Self.FK_group_photo_group">
+      <End Role="group" EntitySet="group" />
+      <End Role="group_photo" EntitySet="group_photo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_subs_group" Association="Self.FK_subs_group">
+      <End Role="group" EntitySet="group" />
+      <End Role="subs" EntitySet="subs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_group_photo_photos" Association="Self.FK_group_photo_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="group_photo" EntitySet="group_photo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_likes_photos" Association="Self.FK_likes_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="likes" EntitySet="likes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_likes_users" Association="Self.FK_likes_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="likes" EntitySet="likes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_photos_photos" Association="Self.FK_photos_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="photos1" EntitySet="photos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_photos_tags_photos" Association="Self.FK_photos_tags_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="photos_tags" EntitySet="photos_tags" />
+    </AssociationSet>
+    <AssociationSet Name="FK_photos_users" Association="Self.FK_photos_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="photos" EntitySet="photos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_users_photo_photos" Association="Self.FK_users_photo_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="users_photo" EntitySet="users_photo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_photos_tags_tags" Association="Self.FK_photos_tags_tags">
+      <End Role="tags" EntitySet="tags" />
+      <End Role="photos_tags" EntitySet="photos_tags" />
+    </AssociationSet>
+    <AssociationSet Name="FK_subs_roles" Association="Self.FK_subs_roles">
+      <End Role="roles" EntitySet="roles" />
+      <End Role="subs" EntitySet="subs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_subs_users" Association="Self.FK_subs_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="subs" EntitySet="subs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_users_tags_tags" Association="Self.FK_users_tags_tags">
+      <End Role="tags" EntitySet="tags" />
+      <End Role="users_tags" EntitySet="users_tags" />
+    </AssociationSet>
+    <AssociationSet Name="FK_users_photo_users" Association="Self.FK_users_photo_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="users_photo" EntitySet="users_photo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_users_tags_users" Association="Self.FK_users_tags_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="users_tags" EntitySet="users_tags" />
+    </AssociationSet>
+    <AssociationSet Name="FK_users_users_photo" Association="Self.FK_users_users_photo">
+      <End Role="users_photo" EntitySet="users_photo" />
+      <End Role="users" EntitySet="users" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

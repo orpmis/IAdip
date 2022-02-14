@@ -1,0 +1,59 @@
+﻿<Page x:Class="InstaArt.Profile"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:InstaArt"
+      mc:Ignorable="d" d:DesignWidth="800"
+      Title="Profile" Height="Auto">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="10,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2.5*"/>
+            </Grid.ColumnDefinitions>
+
+            <Ellipse Width="100" Height="100" Grid.RowSpan="2">
+
+                <Ellipse.Fill>
+                    <SolidColorBrush Color="Black"/>
+                </Ellipse.Fill>
+
+            </Ellipse>
+
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Ник" FontSize="25" VerticalAlignment="Center" Margin="0" Name="Nick"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="Статус" FontSize="15" VerticalAlignment="Top" Margin="0" Name="Status"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="2" CanContentScroll="False" VerticalScrollBarVisibility="Auto">
+            <Grid Name="ContentField">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+                <WrapPanel Name="UserPhotoList" Margin="10" HorizontalAlignment="Left" Grid.Row="0" Grid.RowSpan="2">
+                </WrapPanel>
+
+                <WrapPanel Name="UserFolderList" Margin="10" HorizontalAlignment="Left" Grid.Row="0">
+                </WrapPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <WrapPanel Grid.Row="1" Margin="10" VerticalAlignment="Center">
+            <Button Height="40" Width="100" Content="Загрузить" Click="Button_Click" HorizontalAlignment="Left" Margin="10"/>
+            <Button Height="40" Width="100" Content="Создать папку" Click="Button_Click_1" HorizontalAlignment="Left" Margin="10"/>
+            <Button Height="40" Width="100" Content="Назад" Click="Button_Click_2" HorizontalAlignment="Left" Margin="10" Name="BackButton"/>
+        </WrapPanel>
+    </Grid>
+</Page>

@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище InstaArtModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="comments">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_photo" Type="int" />
+    <Property Name="id_user" Type="int" />
+    <Property Name="message" Type="nvarchar" MaxLength="2000" Nullable="false" />
+  </EntityType>
+  <EntityType Name="group">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="description" Type="nvarchar(max)" />
+    <Property Name="short_descp" Type="nvarchar" MaxLength="255" />
+    <Property Name="preview" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="group_photo">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_group" Type="int" />
+    <Property Name="id_photo" Type="int" />
+  </EntityType>
+  <EntityType Name="likes">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_user" Type="int" />
+    <Property Name="id_photo" Type="int" />
+  </EntityType>
+  <EntityType Name="photos">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="address" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="description" Type="nvarchar(max)" />
+    <Property Name="date" Type="date" Nullable="false" />
+    <Property Name="owner" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="subs">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_user" Type="int" />
+    <Property Name="id_group" Type="int" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="user_credentials">
+    <Key>
+      <PropertyRef Name="id_user" />
+    </Key>
+    <Property Name="id_user" Type="int" Nullable="false" />
+    <Property Name="credentials" Type="varbinary(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="users">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nickname" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="password" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="status" Type="nvarchar" MaxLength="300" />
+    <Property Name="email" Type="nvarchar" MaxLength="255" />
+    <Property Name="avatar" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="users_photo">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="id_user" Type="int" />
+    <Property Name="id_photo" Type="int" />
+  </EntityType>
+  <Association Name="FK_comments_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="comments" Type="Self.comments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="comments">
+        <PropertyRef Name="id_photo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_comments_users">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="comments" Type="Self.comments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="comments">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_group_photo_group">
+    <End Role="group" Type="Self.group" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="group_photo" Type="Self.group_photo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="group">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="group_photo">
+        <PropertyRef Name="id_group" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_group_photo_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="0..1" />
+    <End Role="group_photo" Type="Self.group_photo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="group_photo">
+        <PropertyRef Name="id_photo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_likes_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="likes" Type="Self.likes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="likes">
+        <PropertyRef Name="id_photo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_likes_users">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="likes" Type="Self.likes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="likes">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_subs_group">
+    <End Role="group" Type="Self.group" Multiplicity="0..1" />
+    <End Role="subs" Type="Self.subs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="group">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="subs">
+        <PropertyRef Name="id_group" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_subs_users">
+    <End Role="users" Type="Self.users" Multiplicity="0..1" />
+    <End Role="subs" Type="Self.subs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="subs">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_user_credentials_users">
+    <End Role="users" Type="Self.users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="user_credentials" Type="Self.user_credentials" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="user_credentials">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_users_photo_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="0..1" />
+    <End Role="users_photo" Type="Self.users_photo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="users_photo">
+        <PropertyRef Name="id_photo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_users_photo_users">
+    <End Role="users" Type="Self.users" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="users_photo" Type="Self.users_photo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="users_photo">
+        <PropertyRef Name="id_user" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище InstaArtModelContainer">
+    <EntitySet Name="comments" EntityType="Self.comments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="group" EntityType="Self.group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="group_photo" EntityType="Self.group_photo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="likes" EntityType="Self.likes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="photos" EntityType="Self.photos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="subs" EntityType="Self.subs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="user_credentials" EntityType="Self.user_credentials" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="users_photo" EntityType="Self.users_photo" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_comments_photos" Association="Self.FK_comments_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="comments" EntitySet="comments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_comments_users" Association="Self.FK_comments_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="comments" EntitySet="comments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_group_photo_group" Association="Self.FK_group_photo_group">
+      <End Role="group" EntitySet="group" />
+      <End Role="group_photo" EntitySet="group_photo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_group_photo_photos" Association="Self.FK_group_photo_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="group_photo" EntitySet="group_photo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_likes_photos" Association="Self.FK_likes_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="likes" EntitySet="likes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_likes_users" Association="Self.FK_likes_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="likes" EntitySet="likes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_subs_group" Association="Self.FK_subs_group">
+      <End Role="group" EntitySet="group" />
+      <End Role="subs" EntitySet="subs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_subs_users" Association="Self.FK_subs_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="subs" EntitySet="subs" />
+    </AssociationSet>
+    <AssociationSet Name="FK_user_credentials_users" Association="Self.FK_user_credentials_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="user_credentials" EntitySet="user_credentials" />
+    </AssociationSet>
+    <AssociationSet Name="FK_users_photo_photos" Association="Self.FK_users_photo_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="users_photo" EntitySet="users_photo" />
+    </AssociationSet>
+    <AssociationSet Name="FK_users_photo_users" Association="Self.FK_users_photo_users">
+      <End Role="users" EntitySet="users" />
+      <End Role="users_photo" EntitySet="users_photo" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
