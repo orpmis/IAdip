@@ -152,6 +152,7 @@
     <Compile Include="roles.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="SearchBlock.cs" />
     <Compile Include="SessionManager.cs" />
     <Compile Include="Forms\Pages\Profile.xaml.cs">
       <DependentUpon>Profile.xaml</DependentUpon>
@@ -296,6 +297,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Forms\Pages\FolderIcon.png" />
     <Resource Include="Resources\FolderIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

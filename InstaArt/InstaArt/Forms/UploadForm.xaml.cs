@@ -118,7 +118,7 @@ namespace InstaArt
 
             DataBase.GetContext().SaveChanges();
 
-            SessionManager.currentProfile.RefreshPhoto();
+            SessionManager.currentProfile.RefreshPhotos();
 
             Close();
         }

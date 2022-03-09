@@ -40,7 +40,7 @@ namespace InstaArt
             StackPanel folderView = new StackPanel();
             //folderView.Margin = new Thickness(15);
             folderView.Height = 30;
-            folderView.Width = 200;
+            folderView.Width = 150;
             folderView.Orientation = Orientation.Horizontal;
             folderView.Background = new SolidColorBrush(Color.FromArgb(50, 255, 255,255));
 
@@ -53,10 +53,10 @@ namespace InstaArt
             };
 
             Image folderIco = new Image();
-            folderIco.Source = new BitmapImage(new Uri("images/FolderIcon.png", UriKind.Relative));
+            folderIco.Source = new BitmapImage(new Uri("./Resources/FolderIcon.png", UriKind.Relative));
             folderIco.Margin = new Thickness(15);
-            folderIco.Height = 50;
-            folderIco.Width = 50;
+            folderIco.Height = 30;
+            folderIco.Width = 30;
             folderIco.Stretch = System.Windows.Media.Stretch.UniformToFill;
 
             TextBlock folderName = new TextBlock();
@@ -73,7 +73,7 @@ namespace InstaArt
             folderView.MouseDown += (s, e) =>
             {
                 SessionManager.currentFolder = Folder.id;
-                SessionManager.currentProfile.RefreshPhoto();
+                SessionManager.currentProfile.RefreshPhotos();
             };
 
             return border;
@@ -206,5 +206,7 @@ namespace InstaArt
             }
             else return null;
         }
+
+
     }
 }

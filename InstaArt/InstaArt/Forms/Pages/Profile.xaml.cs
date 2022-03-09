@@ -22,30 +22,21 @@ namespace InstaArt
     public partial class Profile : Page
     {
         private users SelectedUser;
-        private bool hasFolders = false;
+        private List<users_photo> userPhoto;
 
-        public bool HasFolders 
-        {
-            get { return hasFolders; }
-            set 
-            {
-                if (value)
-                {
-                    Grid.SetRow(UserPhotoList, 1);
-                    Grid.SetRowSpan(UserPhotoList, 1);
-                }
-                else
-                {
-                    Grid.SetRow(UserPhotoList, 0);
-                    Grid.SetRowSpan(UserPhotoList, 2);
-                }
+        private List<SearchBlock> filter = new List<SearchBlock>();
+        private List<SearchParametr> parametrs;
+        
 
-                hasFolders = value;
-            }
-        }
         public Profile(users User)
         {
             InitializeComponent();
+
+            parametrs = new List<SearchParametr>
+            {
+                new SearchParametr("Дата", SearchType.date),
+                new SearchParametr("Название", SearchType.str)
+            };
 
             SessionManager.currentFolder = null;
             SelectedUser = User;
@@ -53,33 +44,51 @@ namespace InstaArt
             Nick.Text = SelectedUser.nickname;
             Status.Text = SelectedUser.status;
 
-            RefreshPhoto();
+            AddSearchParametr_Click(null, null);
+            filter[0].DeclareFunction(SearchAsync);
+
+            RefreshPhotos();
         }
 
-        private void UpdateInterface()
+        private void UpdateInterface(bool onlyPhotos = false)
         {
             if (SessionManager.currentFolder != null) BackButton.Visibility = Visibility.Visible;
             else BackButton.Visibility = Visibility.Hidden;
-            HasFolders = false;
-            UserFolderList.Children.Clear();
-            UserPhotoList.Children.Clear();
+            if(!onlyPhotos) UserFolderList.Children.RemoveRange(1, UserFolderList.Children.Count - 1);
+            UserPhotoList.Children.RemoveRange(1, UserPhotoList.Children.Count - 1);
         }
-        public void RefreshPhoto()
+        public async void RefreshPhotos()
         {
             UpdateInterface();
 
-            foreach (users_photo UserPhoto in DataBase.GetContext().users_photo.Where(Finding => Finding.id_user == SelectedUser.id && Finding.photos.root == SessionManager.currentFolder).OrderByDescending(ordering => ordering.id))
+            userPhoto = await DataBase.GetUserPhotos(SelectedUser.id, SessionManager.currentFolder);
+
+            foreach (users_photo userPhoto in userPhoto)
             {
-                if (UserPhoto.photos.isFolder == 0) UserPhotoList.Children.Add(GUI.ViewPhoto(UserPhoto.photos));
+                if (userPhoto.photos.isFolder == 0) UserPhotoList.Children.Add(GUI.ViewPhoto(userPhoto.photos));
                 else
                 {
-                    if (!HasFolders) HasFolders = true;
-
-                    UserFolderList.Children.Add(GUI.ViewFolder(UserPhoto.photos));
+                    UserFolderList.Children.Add(GUI.ViewFolder(userPhoto.photos));
                 }
             }
             List<users_photo> ds = DataBase.GetContext().users_photo.Where(Finding => Finding.id_user == SelectedUser.id && Finding.photos.root == SessionManager.currentFolder).ToList();
             Console.WriteLine("AAAAAAAAAAAA THERE IS " + ds.Count);
+        }
+
+        public void RefreshPhotos(List<users_photo> viewingCollection)
+        {
+            UpdateInterface(true);
+
+            foreach (users_photo userPhoto in viewingCollection)
+            {
+                if (userPhoto.photos.isFolder == 0) UserPhotoList.Children.Add(GUI.ViewPhoto(userPhoto.photos));
+            }
+        }
+
+        private void CanInsertNewSearchParametr()
+        {
+            AddSearchParametr.Visibility = Visibility.Visible;
+            if (SearchPart.Children.Count >= parametrs.Count+1) AddSearchParametr.Visibility = Visibility.Hidden;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -99,8 +108,40 @@ namespace InstaArt
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            SessionManager.currentFolder = DataBase.GetContext().photos.Where(Finding => Finding.id == SessionManager.currentFolder).FirstOrDefault().root;
-            RefreshPhoto();
+            SessionManager.currentFolder = DataBase.GoBackFrom(SessionManager.currentFolder).Result;
+            RefreshPhotos();
+        }
+
+        private void AddSearchParametr_Click(object sender, RoutedEventArgs e)
+        {
+            CanInsertNewSearchParametr();
+
+            SearchBlock newParametr = new SearchBlock(parametrs);
+            filter.Add(newParametr);
+
+            SearchPart.RowDefinitions.Add(new RowDefinition());
+            Grid.SetRow(AddSearchParametr, SearchPart.RowDefinitions.Count - 1);
+
+            SearchPart.Children.Add(newParametr.mainGrid);
+            Grid.SetRow(newParametr.mainGrid, SearchPart.RowDefinitions.Count-2);
+        }
+
+        public async void SearchAsync()
+        {
+            List<users_photo> selected = userPhoto;
+            string name = null;
+            DateTime? date = null;
+
+            for (int i = 0; i < SearchPart.Children.Count - 1; i++)
+            {
+                if (filter[i].GetParametr().name == "Дата") date = filter[i].GetValue();
+                if (filter[i].GetParametr().name == "Название") name = filter[i].GetValue();
+            }
+
+            if (date != null) selected = await DataBase.FindUserPhotoByDate(date.Value, SelectedUser.id, SessionManager.currentFolder, selected);
+            if(name != null) selected = await DataBase.FindUserPhotoByName(name, SelectedUser.id, SessionManager.currentFolder, selected);
+
+            RefreshPhotos(selected);
         }
     }
 }

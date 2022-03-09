@@ -12,8 +12,10 @@
         </Style>
 
         <Style TargetType="Button" x:Key="MainButton">
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="150"/>
         </Style>
 
         <Style TargetType="TextBox" x:Key="NoFocused">
@@ -31,6 +33,29 @@
            
         </Style>
 
-       
+        <Style TargetType="Button" x:Key="FunctionalButton">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="15"/>
+        </Style>
+
+        <Style TargetType="Button" BasedOn="{StaticResource FunctionalButton}" x:Key="RoundedFunctionalButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="20"
+                                BorderThickness="1"
+                                BorderBrush="Black">
+
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Application.Resources>
 </Application>

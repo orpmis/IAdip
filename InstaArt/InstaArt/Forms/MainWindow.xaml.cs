@@ -27,7 +27,7 @@ namespace InstaArt
             SessionManager.IsMyComputer = true;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             if (Nickenter.Text != "Введите ник" && Passenter.Text != "Введите пароль")
             {
@@ -37,12 +37,14 @@ namespace InstaArt
 
                 try
                 {
-                    SessionManager.currentUser = DataBase.GetContext().users.FirstOrDefault(aut => aut.nickname == authUser.nickname && aut.password == authUser.password);
+                    SessionManager.currentUser = await DataBase.Authorization(authUser.nickname, authUser.password);
 
                     if (SessionManager.currentUser != null)
                     {
                         DriveAPI.InitializeUsersDrive(SessionManager.currentUser.id);
-                        //сюда еще вкл онлайна
+                        DataBase.GetContext().users.Attach(SessionManager.currentUser);
+                        SessionManager.currentUser.isOnline = 1;//сюда еще вкл онлайна
+                        DataBase.SaveChanges();
 
                         MainForm m = new MainForm();
                         m.Show();
