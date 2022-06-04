@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\dns\Desktop\Диплом\InstaArt\InstaArt\obj\Debug\
+C:\Users\IRBP\Desktop\Диплом\InstaArt\InstaArt\obj\Debug\
 InstaArt
 none
 false
 DEBUG;TRACE
-C:\Users\dns\Desktop\Диплом\InstaArt\InstaArt\App.xaml
-111514140017
-21750853300
-361289352047
-26-215629726
-Forms\FolderCreate.xaml;Forms\GroupCreate.xaml;Forms\Pages\GroupProfile.xaml;Forms\MainForm.xaml;Forms\MainWindow.xaml;Forms\Pages\Profile.xaml;Forms\Registration.xaml;Forms\ShowPhotoForm.xaml;Forms\UploadForm.xaml;Forms\UriImageTest.xaml;Forms\Pages\ListViewPage.xaml;
+C:\Users\IRBP\Desktop\Диплом\InstaArt\InstaArt\App.xaml
+152094901569
+2-15776335
+57-1494753653
+26-2004015192
+Forms\FolderCreate.xaml;Forms\GroupCreate.xaml;Forms\Pages\DialogPage.xaml;Forms\Pages\GroupProfile.xaml;Forms\MainForm.xaml;Forms\MainWindow.xaml;Forms\Pages\Messager.xaml;Forms\Pages\PhotoShowingPage.xaml;Forms\Pages\Profile.xaml;Forms\Pages\ProfileRedact.xaml;Forms\Registration.xaml;Forms\ShowPhotoForm.xaml;Forms\UploadForm.xaml;Forms\UriImageTest.xaml;Forms\Pages\ListViewPage.xaml;
 
 False
 

@@ -4,25 +4,28 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:InstaArt"
-      mc:Ignorable="d" 
-      d:DesignHeight="700" d:DesignWidth="800"
-      Title="GroupProfile" Height="Auto">
+      mc:Ignorable="d" d:DesignWidth="950"
+      Title="GroupProfile" Height="Auto" Width="Auto" Background="White">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0.35*"/>
+        </Grid.ColumnDefinitions>
 
-        <Grid Margin="10" Height="Auto" MaxHeight="280">
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" MaxHeight="200"/>
-                <RowDefinition Height="Auto" MaxHeight="40"/>
-                <RowDefinition Height="Auto" MaxHeight="40"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Image Name="GroupPreview" Height="Auto" MaxHeight="200"/>
+            <Image Name="GroupPreview">
+            </Image>
 
             <TextBlock Grid.Row="1" Text="Название группы"
                        FontSize="25"
@@ -35,37 +38,103 @@
                        VerticalAlignment="Top"
                        Margin="10,5,0,0"
                        Name="GroupShortDescription"/>
+
+            <Button Height="40"
+                Width="200"
+                Content="Подписаться"
+                HorizontalAlignment="Center"
+                Style="{StaticResource FunctionalButton}"
+                Grid.Row="3"/>
+
+            <Grid x:Name="SearchPart"
+                  Grid.Row="4"
+                  Margin="5">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+            </Grid>
+
+            <Button Name="AddSearchParametr"
+                        Grid.Row="5"
+                        Width="200"
+                        Height="40"
+                        Margin="5"
+                        FontSize="20"
+                        Content="+"
+                        VerticalAlignment="Top"
+                        Style="{StaticResource FunctionalButton}" Click="AddSearchParametr_Click"/>
         </Grid>
 
-        <ScrollViewer Grid.Row="2"
-                      Margin="15"
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <StackPanel HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Button Height="40" 
+                        Width="40" 
+                        Content="←"
+                        Click="BackButton_Click"
+                        Margin="0,5,0,5"
+                        FontSize="25"
+                        Style="{StaticResource RoundedFunctionalButton}"
+                        Name="BackButton">
+                </Button>
+                <Button Height="40" 
+                        Width="40" 
+                        Content="R" 
+                        Click="RootButton_Click"
+                        Margin="15,5,0,5"
+                        FontSize="15"
+                        Style="{StaticResource RoundedFunctionalButton}"
+                        Name="RootButton"/>
+            </StackPanel>
+            
+            <ScrollViewer Grid.Row="1"
                       CanContentScroll="False"
-                      VerticalScrollBarVisibility="Auto" >
-            <Grid Name="ContentField">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="3*"/>
-                </Grid.RowDefinitions>
-                <WrapPanel Name="GroupPhotoList"
+                      VerticalScrollBarVisibility="Auto" 
+                      Name="GroupsPhotoPart">
+                
+                    <WrapPanel Name="GroupPhotoList"
                            Margin="10"
                            HorizontalAlignment="Left"
                            Grid.Row="0"
                            Grid.RowSpan="2">
+
+                    <Button Height="200"
+                        Width="200"
+                        FontSize="35"
+                        Content="+"
+                        Click="AddPhoto_Click"
+                        Style="{StaticResource FunctionalButton}"
+                        Name="AddPhoto"/>
                 </WrapPanel>
 
-                <WrapPanel Name="GroupFolderList"
-                           Margin="10"
-                           HorizontalAlignment="Left"
-                           Grid.Row="0">
-                </WrapPanel>
-            </Grid>
+            </ScrollViewer>
+        </Grid>
+
+
+        <ScrollViewer Name="GroupFolderPart"
+                      Grid.Column="2"
+                      VerticalScrollBarVisibility="Auto"
+                      CanContentScroll="False">
+
+            <WrapPanel Name="GroupFolderList"
+                           Margin="0,10,0,10"
+                           HorizontalAlignment="Center">
+
+                <Button Height="40"
+                        Width="150"
+                        FontSize="20"
+                        Content="+"
+                        Margin="15"
+                        Click="AddFolder_Click"
+                        Style="{StaticResource FunctionalButton}"
+                        Name="AddFolder"/>
+            </WrapPanel>
         </ScrollViewer>
-
-        <WrapPanel Grid.Row="1" Margin="10" VerticalAlignment="Center">
-            <Button Height="40" Width="100" Content="Подписаться" HorizontalAlignment="Left" Margin="10"/>
-            <Button Height="40" Width="100" Content="Загрузить" HorizontalAlignment="Left" Margin="10" Name="UploadButton" Click="UploadButton_Click"/>
-            <Button Height="40" Width="100" Content="Создать папку" HorizontalAlignment="Left" Margin="10" Click="Button_Click"/>
-            <Button Height="40" Width="100" Content="Назад" HorizontalAlignment="Left" Margin="10" Name="BackButton" Click="BackButton_Click"/>
-        </WrapPanel>
     </Grid>
 </Page>

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using InstaArt.DataBaseControlClasses;
+using InstaArt.DbModel;
+using InstaArt.Forms.Pages;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,26 +29,26 @@ namespace InstaArt
             InitializeComponent();
 
             SessionManager.MainFrame = MainPage;
-            SessionManager.currentProfile = new Profile(SessionManager.currentUser);
 
+            SessionManager.currentProfile = new Profile(SessionManager.currentUser);
             MainPage.Navigate(SessionManager.currentProfile);
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void GoToUserList_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Navigate(new ListViewPage
                 (
-                    DataBase.GetContext().users.ToList()
+                    await UsersManager.GetAllUsers()
                 ));
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void GoToProfile_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Navigate(SessionManager.currentProfile);
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Exit_Click(object sender, RoutedEventArgs e)
         {
             if (!SessionManager.IsMyComputer)
             {
@@ -55,20 +58,64 @@ namespace InstaArt
                 Directory.Delete(credPath); 
             }
 
-            //сюда еще выкл онлайн
-            DataBase.GetContext().users.Attach(SessionManager.currentUser);
-            SessionManager.currentUser.last_online = DateTime.Now;
-            DataBase.SaveChanges();
+            UserSessionManager.SignOut(SessionManager.currentUser);
 
             Application.Current.Shutdown();
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private async void GoToGroupList_Click(object sender, RoutedEventArgs e)
         {
             MainPage.Navigate(new ListViewPage
                 (
-                    DataBase.GetContext().group.ToList()
+                    await GroupManager.GetAllGroups()
                 ));
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SessionManager.MainFrame.CanGoBack)
+            {
+                SessionManager.MainFrame.GoBack();
+            }
+        }
+
+        private void MainPage_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            if (!SessionManager.MainFrame.CanGoBack)
+            {
+                BackButton.Visibility = Visibility.Hidden;
+            }
+            else BackButton.Visibility = Visibility.Visible;
+        }
+
+        private async void GoToMessages_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage.Navigate(new Messager
+                (
+                await UsersManager.GetAllUsersConversations(SessionManager.currentUser)
+                ));
+        }
+
+        private void HideWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void SetFullScreen_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+                WindowState = WindowState.Normal;
+            else WindowState = WindowState.Maximized;
+        }
+
+        private void CloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }

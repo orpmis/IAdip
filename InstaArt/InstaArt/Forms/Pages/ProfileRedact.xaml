@@ -1,0 +1,123 @@
+﻿<Page x:Class="InstaArt.Forms.Pages.ProfileRedact"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:InstaArt.Forms.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ProfileRedact"
+      Background="Transparent"
+      Height="Auto"
+      Width="Auto"
+      VerticalAlignment="Center"
+      HorizontalAlignment="Center">
+
+    <Grid Name="mainGrid">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Background="Transparent">
+
+            <Ellipse Grid.Row="0"
+                     Width="150"
+                     Height="150"
+                     Name="Avatar"
+                 MouseDown="Avatar_MouseDown">
+
+                <Ellipse.Fill>
+                    <SolidColorBrush Color="Black"/>
+                </Ellipse.Fill>
+
+            </Ellipse>
+
+            <TextBox Grid.Row="1" 
+                       Text="Ник" 
+                       FontSize="45" 
+                       VerticalAlignment="Center" 
+                       Width="500" 
+                 Margin="10"
+                 TextAlignment="Center"
+                       Name="Nick"
+                     Style="{StaticResource Focused}"/>
+
+            <TextBox Grid.Row="2" 
+                       Text="Введите статус..." 
+                       FontSize="25"
+                       Width="500"
+                       VerticalAlignment="Center" 
+                       TextWrapping="Wrap"
+                       Margin="10,5,10,0" 
+                       Name="Status"
+                     Style="{StaticResource NoFocused}"
+                     GotFocus="Status_GotFocus"
+                     LostFocus="Status_LostFocus"/>
+
+            <TextBox Grid.Row="3" 
+                       FontSize="35"
+                       VerticalAlignment="Center" 
+                       Width="500"
+                       TextWrapping="Wrap"
+                       Margin="10,5,10,0" 
+                       Name="Email"
+                     Style="{StaticResource Focused}"/>
+
+            <Button Name="SaveButton"
+            Grid.Row="4"
+                Width="200"
+                Height="50"
+                Style="{StaticResource RoundedFunctionalButton}"
+                Content="Сохранить"
+                Click="SaveButton_Click"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1"
+              Grid.RowSpan="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <ScrollViewer Grid.Row="1"
+                      CanContentScroll="False" 
+                      VerticalScrollBarVisibility="Auto"
+                      Margin="10">
+
+                <WrapPanel Name="UserPhotoList"
+                       HorizontalAlignment="Stretch">
+
+                    <Button Height="200"
+                        Width="200"
+                        FontSize="35"
+                        Content="X"
+                        Click="NoAvatar_Click"
+                        Style="{StaticResource FunctionalButton}"
+                        Name="NoAvatar"/>
+                </WrapPanel>
+
+            </ScrollViewer>
+
+            <Button Name="CloseButton"
+                Width="30"
+                Height="30"
+                HorizontalAlignment="Right"
+                Style="{StaticResource RoundedFunctionalButton}"
+                Content="X"
+                Click="CloseButton_Click"/>
+            
+        </Grid>
+        
+
+        
+
+    </Grid>
+</Page>

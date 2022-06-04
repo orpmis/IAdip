@@ -1,4 +1,5 @@
 ﻿using System;
+using InstaArt.DbModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,9 @@ namespace InstaArt
             }
 
             FolderPlace.ItemsSource = FoldersForSelecting;
+
+            if(SessionManager.currentFolder != null)
+            FolderPlace.SelectedIndex = FoldersForSelecting.FindIndex(f => f.id == SessionManager.currentFolder);
         }
 
         public FolderCreate(group thisGroup)
@@ -59,6 +63,9 @@ namespace InstaArt
             }
 
             FolderPlace.ItemsSource = FoldersForSelecting;
+
+            if (SessionManager.currentFolder != null)
+                FolderPlace.SelectedIndex = FoldersForSelecting.FindIndex(f => f.id == SessionManager.currentFolder);
         }
 
         private void Create_Click(object sender, RoutedEventArgs e)
@@ -85,6 +92,9 @@ namespace InstaArt
                 MyPhoto.id_user = SessionManager.currentUser.id;
                 MyPhoto.id_photo = NewFolder.id;
                 DataBase.GetContext().users_photo.Add(MyPhoto);
+                DataBase.GetContext().SaveChanges();
+                SessionManager.currentProfile.UpdateInterface(true);
+                SessionManager.currentProfile.RefreshContent();
             }
             else
             {
@@ -94,7 +104,7 @@ namespace InstaArt
                 DataBase.GetContext().group_photo.Add(MyPhoto);
             }
 
-            DataBase.GetContext().SaveChanges();
+           
             Close();
         }
     }

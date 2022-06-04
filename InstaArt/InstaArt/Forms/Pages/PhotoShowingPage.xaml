@@ -1,0 +1,141 @@
+﻿<Page x:Class="InstaArt.Forms.Pages.PhotoShowingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:InstaArt.Forms.Pages"
+      mc:Ignorable="d" 
+      Title="ShowPhotoForm" 
+      d:Height="500"
+      d:Width="800"
+      Height="Auto" 
+      Width="Auto" 
+      Background="White">
+    
+    <Grid Name="ContentField">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0"/>
+        </Grid.ColumnDefinitions>
+        
+        <Image Name="AnImage"
+               Grid.Row="1"
+               Margin="10"
+               Grid.Column="1"
+               Grid.RowSpan="1"/>
+        
+        <TextBlock Name="PhotoName"
+                   Style="{StaticResource AR_text}"
+                   Foreground="Black"
+                   Text="Название фото"
+                   Grid.ColumnSpan="3"/>
+
+
+        <TextBlock Name="Describtion"
+                   Grid.Row="1"
+                   Margin="10"
+                   Height="Auto"/>
+        <StackPanel Grid.Row="3"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    HorizontalAlignment="Center"
+                    Margin="10"
+                    Orientation="Horizontal">
+            <Image Source="/images/heart.png"
+                   Name="LikeButton"
+                   MouseDown="LikeButton_MouseDown"/>
+
+            <Image Source="/images/commentsIcon.png"
+                       VerticalAlignment="Center"
+                       Margin="10,0,0,0"
+                       Name="CommentsButton"
+                   Height="60"
+                   Width="60"
+                       MouseDown="CommentsButton_Up"/>
+
+            <Image Source="/images/folder.png"
+                   Name="DescriptionButton"
+                   MouseDown="DescriptionButton_MouseDown"/>
+
+        </StackPanel>
+
+        <Grid Grid.Row="1"
+              Grid.Column="2"
+              Grid.RowSpan="2"
+              Width="Auto"
+              Name="CommentArea">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid Name="CommentInputGrid">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="70"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Name="CommentUpload"
+                        Grid.Column="1"
+                        Width="40"
+                        Height="40"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Margin="10"
+                        Style="{StaticResource RoundedFunctionalButton}"
+                        Click="CommentUpload_Click"
+                            Content="Send"
+                            FontSize="16"
+                        Foreground="Black"
+                            BorderBrush="Black"/>
+
+                    
+                    <Button Name="SetSendMode"
+                            Width="20"
+                            Height="20"
+                            Content="-"
+                            FontSize="15"
+                            Style="{StaticResource RoundedFunctionalButton}"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            Click="SetSendMode_Click"
+                            Visibility="Collapsed"
+                            Foreground="Black"
+                            BorderBrush="Black"/>
+
+                    <TextBox Name="CommentInputBox"
+                             HorizontalAlignment="Stretch"
+                             VerticalAlignment="Stretch"
+                             Width="Auto"
+                             Height="Auto"
+                             Margin="10,25,10,10"
+                             TextWrapping="Wrap"
+                             Grid.Row="1"/>
+
+            </Grid>
+
+            <ScrollViewer Grid.Row="1">
+                <StackPanel Name="CommentsList"
+                  Width="Auto"
+                            Orientation="Vertical">
+
+                    <!--<Grid.RowDefinitions>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>-->
+
+                </StackPanel>
+            </ScrollViewer>
+
+        </Grid>
+
+       
+    </Grid>
+</Page>

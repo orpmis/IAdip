@@ -5,17 +5,16 @@ using System.Windows;
 
 namespace InstaArt
 {
-    public delegate void function();
     public class SearchBlock
     {
+        public int index { get; set; }
         public Grid mainGrid { get; set; }
         private ComboBox searchParametrSelector { get; set; }
         private DatePicker dateInput { get; set; }
         private TextBox otherInput { get; set; }
         private Button functionalButton { get; set; }
         public SearchType type { get; set; }
-        function FunctionButtonClick;
-       
+
         public SearchBlock(List<SearchParametr> parametrs)
         {
             mainGrid = new Grid();
@@ -35,8 +34,8 @@ namespace InstaArt
 
             searchParametrSelector.SelectionChanged += OnSelectionChanged;
             searchParametrSelector.ItemsSource = parametrs;
-            searchParametrSelector.DisplayMemberPath = "name";
-            searchParametrSelector.SelectedValuePath = "type";
+            searchParametrSelector.DisplayMemberPath = "Name";
+            searchParametrSelector.SelectedValuePath = "Type";
             searchParametrSelector.SelectedIndex = 0;
         }
 
@@ -51,16 +50,16 @@ namespace InstaArt
         public void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SearchParametr par = (SearchParametr)searchParametrSelector.SelectedItem;
-            type = par.type;
+            type = par.Type;
 
             switch (type)
             {
                 case SearchType.date:
-                    VisiblityOff();
+                    ResetInputFields();
                     dateInput.Visibility = Visibility.Visible;
                     break;
                 default:
-                    VisiblityOff();
+                    ResetInputFields();
                     otherInput.Visibility = Visibility.Visible;
                     break;
             }
@@ -115,20 +114,35 @@ namespace InstaArt
             Grid.SetRowSpan(functionalButton, rowSpan);
             Grid.SetColumnSpan(functionalButton, colSpan);
         }
-        private void VisiblityOff()
+        private void ResetInputFields()
         {
             dateInput.Visibility = Visibility.Hidden;
             otherInput.Visibility = Visibility.Hidden;
+
+            dateInput.SelectedDate = null;
+            otherInput.Text = null;
         }
 
-        public void DeclareFunction(function f)
+        public void DeclareFunction(Action a)
         {
-            FunctionButtonClick = f;
+            functionalButton = new Button();
+            SetButtonPosition(0, 1, 1, 1);
+
             functionalButton.Click += (s, e) =>
-            {
-                FunctionButtonClick();
-            };
+                {
+                    a(); 
+                };
+            
         }
+
+        public void DeclareFunction(Action<int> d)
+        {
+                functionalButton.Click += (s, e) =>
+                {
+                    d(index);
+                };
+        }
+
         //возврат значения и расстановка внутренних элементов по гриду, впихивание в value значений. Возможно методы возврата дял всех базовых типов отдельно
     }
 
@@ -143,12 +157,12 @@ namespace InstaArt
 
     public class SearchParametr
     {
-        public string name { get; set; }
-        public SearchType type { get; set; }
+        public string Name { get; set; }
+        public SearchType Type { get; set; }
 
         public SearchParametr(string n, SearchType t)
         {
-            name = n; type = t;
+            Name = n; Type = t;
         }
     }
 

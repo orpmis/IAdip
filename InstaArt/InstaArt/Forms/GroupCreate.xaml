@@ -5,21 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InstaArt"
         mc:Ignorable="d"
-        Title="GroupCreate" Height="350" Width="460">
+        Title="GroupCreate" Height="400" Width="460"
+        Background="#343337">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.7*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <TextBox Name="GroupName" Margin="15" Height="50"/>
-        <TextBox Name="ShortDescription" Margin="15" Height="50" Grid.Column="1"/>
-        <TextBox Name="Describtion" Margin="15" Grid.Row="1" Grid.ColumnSpan="2" TextWrapping="Wrap"/>
-        <Button Content="Создать" Name="CreateGroup" Margin="10" Grid.Row="3" Grid.ColumnSpan="2" Width="150" Click="CreateGroup_Click"/>
+        <TextBox Name="GroupName"
+                 Margin="15" 
+                 Height="50"
+                 Width="Auto"
+                 HorizontalAlignment="Stretch"
+                 Style="{StaticResource Focused}"/>
+        <TextBox Name="ShortDescription" 
+                 Margin="15" 
+                 Height="50"
+                  Width="Auto"
+                 HorizontalAlignment="Stretch"
+                 Style="{StaticResource Focused}"
+                 Grid.Column="1"/>
+        <TextBox Name="Describtion" 
+                 Margin="15" Grid.Row="1" 
+                 Grid.ColumnSpan="2"
+                 TextWrapping="Wrap"
+                  Width="Auto"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 Height="Auto"
+                 Style="{StaticResource Focused}"/>
+        <Button Content="Создать"
+                Name="CreateGroup" 
+                Margin="10"
+                Grid.Row="3"
+                Grid.ColumnSpan="2" 
+                Width="250"
+                Height="50" 
+                Click="CreateGroup_Click"
+                Style="{StaticResource RoundedFunctionalButton}"/>
     </Grid>
 </Window>

@@ -8,6 +8,7 @@
     <Property Name="id_photo" Type="Int32" />
     <Property Name="id_user" Type="Int32" />
     <Property Name="message" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="date" Type="DateTime" Precision="3" />
     <NavigationProperty Name="photos" Relationship="Self.FK_comments_photos" FromRole="comments" ToRole="photos" />
     <NavigationProperty Name="users" Relationship="Self.FK_comments_users" FromRole="comments" ToRole="users" />
   </EntityType>
@@ -66,6 +67,7 @@
     <NavigationProperty Name="photos_tags" Relationship="Self.FK_photos_tags_photos" FromRole="photos" ToRole="photos_tags" />
     <NavigationProperty Name="users" Relationship="Self.FK_photos_users" FromRole="photos" ToRole="users" />
     <NavigationProperty Name="users_photo" Relationship="Self.FK_users_photo_photos" FromRole="photos" ToRole="users_photo" />
+    <NavigationProperty Name="users1" Relationship="Self.FK_users_photos" FromRole="photos" ToRole="users" />
   </EntityType>
   <EntityType Name="photos_tags">
     <Key>
@@ -132,6 +134,7 @@
     <NavigationProperty Name="comments" Relationship="Self.FK_comments_users" FromRole="users" ToRole="comments" />
     <NavigationProperty Name="likes" Relationship="Self.FK_likes_users" FromRole="users" ToRole="likes" />
     <NavigationProperty Name="photos" Relationship="Self.FK_photos_users" FromRole="users" ToRole="photos" />
+    <NavigationProperty Name="photos1" Relationship="Self.FK_users_photos" FromRole="users" ToRole="photos" />
     <NavigationProperty Name="subs" Relationship="Self.FK_subs_users" FromRole="users" ToRole="subs" />
     <NavigationProperty Name="users_photo" Relationship="Self.FK_users_photo_users" FromRole="users" ToRole="users_photo" />
     <NavigationProperty Name="users_tags" Relationship="Self.FK_users_tags_users" FromRole="users" ToRole="users_tags" />
@@ -157,6 +160,21 @@
     <Property Name="id_user" Type="Int32" Nullable="false" />
     <NavigationProperty Name="tags" Relationship="Self.FK_users_tags_tags" FromRole="users_tags" ToRole="tags" />
     <NavigationProperty Name="users" Relationship="Self.FK_users_tags_users" FromRole="users_tags" ToRole="users" />
+  </EntityType>
+  <EntityType Name="MostLikedPhoto">
+    <Key>
+      <PropertyRef Name="Nick" />
+    </Key>
+    <Property Name="Nick" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Photo" Type="Int32" />
+  </EntityType>
+  <EntityType Name="UsersTotalInfo">
+    <Key>
+      <PropertyRef Name="Nick" />
+    </Key>
+    <Property Name="Nick" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Photos" Type="Int32" />
+    <Property Name="Folders" Type="Int32" />
   </EntityType>
   <Association Name="FK_comments_photos">
     <End Role="photos" Type="Self.photos" Multiplicity="0..1">
@@ -316,6 +334,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_users_photos">
+    <End Role="photos" Type="Self.photos" Multiplicity="0..1" />
+    <End Role="users" Type="Self.users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="photos">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="users">
+        <PropertyRef Name="avatar" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_photos_tags_tags">
     <End Role="tags" Type="Self.tags" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -408,7 +438,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityContainer Name="MyAppET2" annotation:LazyLoadingEnabled="true">
+  <EntityContainer Name="InAEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="comments" EntityType="Self.comments" />
     <EntitySet Name="group" EntityType="Self.group" />
     <EntitySet Name="group_photo" EntityType="Self.group_photo" />
@@ -422,6 +452,8 @@
     <EntitySet Name="users" EntityType="Self.users" />
     <EntitySet Name="users_photo" EntityType="Self.users_photo" />
     <EntitySet Name="users_tags" EntityType="Self.users_tags" />
+    <EntitySet Name="MostLikedPhoto" EntityType="Self.MostLikedPhoto" />
+    <EntitySet Name="UsersTotalInfo" EntityType="Self.UsersTotalInfo" />
     <AssociationSet Name="FK_comments_photos" Association="Self.FK_comments_photos">
       <End Role="photos" EntitySet="photos" />
       <End Role="comments" EntitySet="comments" />
@@ -470,6 +502,10 @@
       <End Role="photos" EntitySet="photos" />
       <End Role="users_photo" EntitySet="users_photo" />
     </AssociationSet>
+    <AssociationSet Name="FK_users_photos" Association="Self.FK_users_photos">
+      <End Role="photos" EntitySet="photos" />
+      <End Role="users" EntitySet="users" />
+    </AssociationSet>
     <AssociationSet Name="FK_photos_tags_tags" Association="Self.FK_photos_tags_tags">
       <End Role="tags" EntitySet="tags" />
       <End Role="photos_tags" EntitySet="photos_tags" />
@@ -498,5 +534,50 @@
       <End Role="users_photo" EntitySet="users_photo" />
       <End Role="users" EntitySet="users" />
     </AssociationSet>
+    <FunctionImport Name="OnlineUsers" />
+    <FunctionImport Name="PhotoLikesCount">
+      <Parameter Name="photoID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(Model.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(Model.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
   </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
 </Schema>

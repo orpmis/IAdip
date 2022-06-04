@@ -1,4 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using InstaArt.DataBaseControlClasses;
+using InstaArt.DbModel;
+using InstaArt.Forms.Pages;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,86 +24,170 @@ namespace InstaArt
     /// </summary>
     public partial class GroupProfile : Page
     {
-        private group SelectedGroup;
-        private bool hasFolders = false;
+        private group selectedGroup;
+        private List<group_photo> groupPhotos;
 
-        public bool HasFolders
-        {
-            get { return hasFolders; }
-            set
-            {
-                if (value)
-                {
-                    Grid.SetRow(GroupPhotoList, 1);
-                    Grid.SetRowSpan(GroupPhotoList, 1);
-                }
-                else
-                {
-                    Grid.SetRow(GroupPhotoList, 0);
-                    Grid.SetRowSpan(GroupPhotoList, 2);
-                }
+        private List<SearchBlock> filter = new List<SearchBlock>();
+        private List<SearchParametr> parametrs;
 
-                hasFolders = value;
-            }
-        }
         public GroupProfile(group Group)
         {
             InitializeComponent();
 
+            parametrs = new List<SearchParametr>
+            {
+                new SearchParametr("Дата", SearchType.date),
+                new SearchParametr("Название", SearchType.str)
+            };
+
             SessionManager.currentGroup = this;
             SessionManager.currentFolder = null;
 
-            SelectedGroup = Group;
+            selectedGroup = Group;
 
-            GroupName.Text = SelectedGroup.name;
-            GroupShortDescription.Text = SelectedGroup.short_descp;
+            GroupName.Text = selectedGroup.name;
+            GroupShortDescription.Text = selectedGroup.short_descp;
 
-            RefreshPhoto();
+            AddSearchParametr_Click(null, null);
+            filter[0].DeclareFunction(SearchAsync);
+
+            RefreshPhotos();
         }
 
-        private void UpdateInterface()
+        public void UpdateInterface(bool onlyPhotos = false)
         {
-            if (SessionManager.currentFolder != null) BackButton.Visibility = Visibility.Visible;
-            else BackButton.Visibility = Visibility.Hidden;
-            HasFolders = false;
-            GroupFolderList.Children.Clear();
-            GroupPhotoList.Children.Clear();
+            if (SessionManager.currentFolder != null)
+            {
+                BackButton.Visibility = Visibility.Visible;
+                RootButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BackButton.Visibility = Visibility.Hidden;
+                RootButton.Visibility = Visibility.Hidden;
+            }
+            if (!onlyPhotos) GroupFolderList.Children.RemoveRange(1, GroupFolderList.Children.Count - 1);
+            GroupPhotoList.Children.RemoveRange(1, GroupPhotoList.Children.Count - 1);
         }
-        public void RefreshPhoto()
+        public async void RefreshPhotos()
         {
             UpdateInterface();
 
-            foreach (group_photo GroupPhoto in DataBase.GetContext().group_photo.Where(Finding => Finding.id_group == SelectedGroup.id && Finding.photos.root == SessionManager.currentFolder).OrderBy(ordering => ordering.id))
+            groupPhotos = await GroupManager.GetGroupPhotosInFolder(selectedGroup.id, SessionManager.currentFolder);
+
+            foreach (group_photo groupPhoto in groupPhotos)
             {
-                if (GroupPhoto.photos.isFolder == 0) GroupPhotoList.Children.Add(GUI.ViewPhoto(GroupPhoto.photos));
+                if (groupPhoto.photos.isFolder == 0)
+                {
+                    Image photoView = GUI.ViewPhoto(groupPhoto.photos);
+                    GroupPhotoList.Children.Add(photoView);
+                    photoView.MouseDown += (s, e) =>
+                    {
+                        SessionManager.MainFrame.Navigate(new PhotoShowingPage(groupPhoto.photos));
+                    };
+                    GroupPhotoList.Children.Add(GUI.ViewPhoto(groupPhoto.photos));
+                }
                 else
                 {
-                    if (!HasFolders) HasFolders = true;
-
-                    GroupFolderList.Children.Add(GUI.ViewFolder(GroupPhoto.photos));
+                    Border folderView = GUI.ViewFolder(groupPhoto.photos);
+                    folderView.MouseDown += (s, e) =>
+                    {
+                        SessionManager.currentFolder = groupPhoto.photos.id;
+                        RefreshPhotos();
+                    };
+                    GroupFolderList.Children.Add(folderView);
                 }
             }
+        }
+
+        public void RefreshPhotos(List<group_photo> viewingCollection)
+        {
+            UpdateInterface(true);
+
+            foreach (group_photo groupPhoto in viewingCollection)
+            {
+                if (groupPhoto.photos.isFolder == 0) GroupPhotoList.Children.Add(GUI.ViewPhoto(groupPhoto.photos));
+            }
+        }
+
+        private void CanInsertNewSearchParametr()
+        {
+            AddSearchParametr.Visibility = Visibility.Visible;
+            if (filter.Count >= parametrs.Count) AddSearchParametr.Visibility = Visibility.Hidden;
+        }
+
+        private void AddSearchParametr_Click(object sender, RoutedEventArgs e)
+        {
+            SearchBlock newParametr = new SearchBlock(parametrs);
+            newParametr.index = filter.Count;
+            filter.Add(newParametr);
+
+            SearchPart.RowDefinitions.Add(new RowDefinition());
+
+            SearchPart.Children.Add(newParametr.mainGrid);
+            Grid.SetRow(newParametr.mainGrid, SearchPart.RowDefinitions.Count - 1);
+
+            newParametr.DeclareFunction(DeleteParametr);
+
+            CanInsertNewSearchParametr();
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             SessionManager.currentFolder = DataBase.GetContext().photos.Where(Finding => Finding.id == SessionManager.currentFolder).FirstOrDefault().root;
-            RefreshPhoto();
+            RefreshPhotos();
         }
 
-        private void UploadButton_Click(object sender, RoutedEventArgs e)
+        private void AddPhoto_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == true)
             {
-                new UploadForm(dialog.FileName, SelectedGroup);
+                new UploadForm(dialog.FileName, selectedGroup);
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AddFolder_Click(object sender, RoutedEventArgs e)
         {
-            FolderCreate fc = new FolderCreate(SelectedGroup);
+            FolderCreate fc = new FolderCreate(selectedGroup);
             fc.Show();
+        }
+
+        private void RootButton_Click(object sender, RoutedEventArgs e)
+        {
+            SessionManager.currentFolder = null;
+            RefreshPhotos();
+        }
+
+        public async void SearchAsync()
+        {
+            List<group_photo> selected = groupPhotos;
+            string name = null;
+            DateTime? date = null;
+
+            for (int i = 0; i < filter.Count; i++)
+            {
+                if (filter[i].GetParametr().Name == "Дата") date = filter[i].GetValue();
+                if (filter[i].GetParametr().Name == "Название") name = filter[i].GetValue();
+            }
+
+            selected = await FindAndSorting.FindGroupPhotoByParametrs(selectedGroup.id, SessionManager.currentFolder, name, date, selected);
+
+            RefreshPhotos(selected);
+        }
+
+        public void DeleteParametr(int index)
+        {
+            filter.RemoveAt(index);
+            SearchPart.Children.RemoveAt(index);
+            SearchPart.RowDefinitions.RemoveAt(index);
+
+            for (int i = index; i < filter.Count; i++)
+            {
+                filter[i].index--;
+            }
+
+            CanInsertNewSearchParametr();
         }
     }
 }

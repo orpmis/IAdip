@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
+using InstaArt.DbModel;
 
 namespace InstaArt
 {
@@ -55,6 +56,9 @@ namespace InstaArt
 
                 PhotoPlace.ItemsSource = FoldersForSelecting;
 
+                if (SessionManager.currentFolder != null)
+                    PhotoPlace.SelectedIndex = FoldersForSelecting.FindIndex(f => f.id == SessionManager.currentFolder);
+
                 UploadButton.Click += UploadButton_ToUser;
             }
             else Close();
@@ -86,6 +90,9 @@ namespace InstaArt
 
                 PhotoPlace.ItemsSource = FoldersForSelecting;
 
+                if (SessionManager.currentFolder != null)
+                    PhotoPlace.SelectedIndex = FoldersForSelecting.FindIndex(f => f.id == SessionManager.currentFolder);
+
                 UploadButton.Click += UploadButton_ToGroup;
             }
             else Close();
@@ -108,7 +115,16 @@ namespace InstaArt
 
             string NewPhotoUri = DriveAPI.Upload(FilePath, System.IO.Path.GetFileName(FilePath), MimeType, FileParent);
             
-            photos NewPhoto = new photos{name=PhotoName.Text,description = PhotoDescriprion.Text, address = NewPhotoUri, date=DateTime.Now.Date, owner=SessionManager.currentUser.id, isFolder = 0, root = ParentId };
+            photos NewPhoto = new photos
+            {
+                name=PhotoName.Text,
+                description = PhotoDescriprion.Text,
+                address = NewPhotoUri,
+                date=DateTime.Now.Date,
+                owner=SessionManager.currentUser.id,
+                isFolder = 0,
+                root = ParentId 
+            };
             DataBase.GetContext().photos.Add(NewPhoto);
 
             users_photo MyPhoto = new users_photo();
@@ -118,7 +134,7 @@ namespace InstaArt
 
             DataBase.GetContext().SaveChanges();
 
-            SessionManager.currentProfile.RefreshPhotos();
+            SessionManager.currentProfile.RefreshContent();
 
             Close();
         }
@@ -138,7 +154,16 @@ namespace InstaArt
 
             string NewPhotoUri = DriveAPI.Upload(FilePath, System.IO.Path.GetFileName(FilePath), MimeType, FileParent);
 
-            photos NewPhoto = new photos { name = PhotoName.Text, description = PhotoDescriprion.Text, address = NewPhotoUri, date = DateTime.Now.Date, owner = SessionManager.currentUser.id, isFolder = 0, root = ParentId };
+            photos NewPhoto = new photos 
+            { 
+                name = PhotoName.Text,
+                description = PhotoDescriprion.Text,
+                address = NewPhotoUri,
+                date = DateTime.Now.Date,
+                owner = SessionManager.currentUser.id,
+                isFolder = 0,
+                root = ParentId 
+            };
             DataBase.GetContext().photos.Add(NewPhoto);
 
             group_photo groupPhotos = new group_photo();
@@ -148,7 +173,7 @@ namespace InstaArt
 
             DataBase.GetContext().SaveChanges();
 
-            SessionManager.currentGroup.RefreshPhoto();
+            SessionManager.currentGroup.RefreshPhotos();
 
             Close();
         }

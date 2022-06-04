@@ -5,19 +5,100 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InstaArt"
         mc:Ignorable="d"
-        Title="MainWindow" Height="385" Width="635" MinHeight="385" MinWidth="635" MaxHeight="385" MaxWidth="635">
+        Background="#343337"
+        Title="MainWindow" 
+        Height="385" 
+        Width="635"
+        MinHeight="385"
+        MinWidth="635" 
+        MaxHeight="385"
+        MaxWidth="635"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="0.8*"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Авторизация" Style="{StaticResource AR_text}" />
-        <TextBox Grid.Row="1" Name="Nickenter" GotFocus="Nickenter_GotFocus" Text="Введите ник" Style="{StaticResource NoFocused}" LostFocus="Nickenter_LostFocus"/>
-        <TextBox Grid.Row="2" Name="Passenter" Text="Введите пароль" Style="{StaticResource NoFocused}" LostFocus="Passenter_LostFocus" GotFocus="Passenter_GotFocus"/>
-        <Button Grid.Row="3" Width="250" Height="50" Content="Войти" FontSize="25" Click="Button_Click"/>
-        <TextBlock Grid.Row ="4" Text="Еще нет аккаунта?" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown"/>
+
+        <Grid Background="#222126"/>
+
+        <Grid HorizontalAlignment="Stretch">
+            <Button Height="25"
+                    Width="25"
+                    HorizontalAlignment="Right"
+                    Content="X"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="White"
+                    Margin="0,0,0,0"
+                    Name="CloseApp"
+                    Click="CloseApp_Click"/>
+
+            <Button Height="25"
+                    Width="25"
+                    HorizontalAlignment="Right"
+                    Content="O"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="White"
+                    Margin="0,0,30,0"
+                    Name="SetFullScreen"
+                    Click="SetFullScreen_Click"/>
+
+            <Button Height="25"
+                    Width="25"
+                    HorizontalAlignment="Right"
+                    Content="_"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="White"
+                    Margin="0,0,60,0"
+                    Name="HideWindow"
+                    Click="HideWindow_Click"
+                    Panel.ZIndex="1"/>
+        </Grid>
+
+        <TextBlock Text="Авторизация"
+                   Style="{StaticResource AR_text}"
+                   Grid.Row="1"/>
+        <TextBox Grid.Row="2" 
+                 Name="Nickenter" 
+                 GotFocus="Nickenter_GotFocus" 
+                 Text="Введите ник"
+                 Style="{StaticResource NoFocused}"
+                 LostFocus="Nickenter_LostFocus"/>
+        <TextBox Grid.Row="3" 
+                 Name="Passenter"
+                 Text="Введите пароль"
+                 Style="{StaticResource NoFocused}" 
+                 LostFocus="Passenter_LostFocus" 
+                 GotFocus="Passenter_GotFocus"/>
+        <Button Grid.Row="4" 
+                Width="250"
+                Height="50" 
+                Content="Войти" 
+                FontSize="25" 
+                Click="Button_Click"
+                Style="{StaticResource RoundedFunctionalButton}"/>
+        <TextBlock Grid.Row ="5"
+                   Text="Еще нет аккаунта?" 
+                   FontSize="15" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" 
+                   MouseDown="TextBlock_MouseDown"
+                   Foreground="White"/>
     </Grid>
 </Window>

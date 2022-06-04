@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InstaArt.DataBaseControlClasses;
+using InstaArt.DbModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,14 +39,12 @@ namespace InstaArt
 
                 try
                 {
-                    SessionManager.currentUser = await DataBase.Authorization(authUser.nickname, authUser.password);
+                    SessionManager.currentUser = await UserSessionManager.Authorization(authUser.nickname, authUser.password);
 
                     if (SessionManager.currentUser != null)
                     {
                         DriveAPI.InitializeUsersDrive(SessionManager.currentUser.id);
-                        DataBase.GetContext().users.Attach(SessionManager.currentUser);
-                        SessionManager.currentUser.isOnline = 1;//сюда еще вкл онлайна
-                        DataBase.SaveChanges();
+                        UserSessionManager.SignIn(SessionManager.currentUser);
 
                         MainForm m = new MainForm();
                         m.Show();
@@ -52,7 +52,7 @@ namespace InstaArt
                     }
                     else MessageBox.Show("Неверный логин или пароль");
                 }
-                catch (Exception ex) { MessageBox.Show(ex.ToString() , "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
+                catch { MessageBox.Show("Ошибка обращения к диску, попробуйте еще раз" , "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
 
             }
             else MessageBox.Show("Введите все данные");
@@ -100,6 +100,28 @@ namespace InstaArt
             Registration r = new Registration();
             r.Show();
             Close();
+        }
+
+        private void HideWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void SetFullScreen_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+                WindowState = WindowState.Normal;
+            else WindowState = WindowState.Maximized;
+        }
+
+        private void CloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }

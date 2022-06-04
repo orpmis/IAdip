@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InstaArt.DataBaseControlClasses;
+using InstaArt.DbModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +21,7 @@ namespace InstaArt
     /// </summary>
     public partial class Registration : Window
     {
+        users reg;
         public Registration()
         {
             InitializeComponent();
@@ -32,34 +35,27 @@ namespace InstaArt
             Close();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
            
             if (Nick.Text != "Введите ник" && Email.Text != "Введите почту" && Pass.Text != "Введите пароль" && Repeatpass.Text != "Повторите пароль")
             {
                 if (Pass.Text == Repeatpass.Text)
                 {
-                    users reguser = new users();
-                    reguser.nickname = Nick.Text;
-                    reguser.email = Email.Text;
-                    reguser.password = Pass.Text;
-                    reguser.registration = DateTime.Now.Date;
 
-
-                    if (IsNicknameFree(reguser.nickname))
+                    if (await UniqueDataControl.IsNicknameFree(Nick.Text))
                     {
-                        if (IsMailFree(reguser.email))
+                        if (await UniqueDataControl.IsMailFree(Email.Text))
                         {
                             MessageBox.Show("Подтвердите доступ к аккаунту для приложения");
 
                             try
                             {
-                                DataBase.GetContext().users.Add(reguser);
-                                DataBase.GetContext().SaveChanges();
+                                reg = await DataBase.Registartion(Nick.Text, Pass.Text, Email.Text);
 
                                 DriveAPI.RegistrateCredential
                                 (
-                                DataBase.GetContext().users.Where(Finding => Finding.nickname == reguser.nickname && Finding.password == reguser.password).FirstOrDefault().id
+                                    reg.id
                                 );
 
                                 MessageBox.Show("Регистрация прошла успешно");
@@ -68,7 +64,11 @@ namespace InstaArt
                                 a.Show();
                                 Close();
                             }
-                            catch (Exception ex) { MessageBox.Show("Доступ не был предоставлен"); }
+                            catch
+                            { 
+                                UserSessionManager.UserDelete(reg);
+                                MessageBox.Show("Доступ не был предоставлен"); 
+                            }
 
                         }
                         else MessageBox.Show("Указанная почта уже зарегистрирована");
@@ -82,17 +82,7 @@ namespace InstaArt
             else MessageBox.Show("Введите все данные");
         }
 
-        private bool IsNicknameFree(string nick)
-        {
-            bool flag = DataBase.GetContext().users.FirstOrDefault(someuser => someuser.nickname == nick) is null ? true : false;
-            return flag;
-        }
-
-        private bool IsMailFree(string mail)
-        {
-            bool flag = DataBase.GetContext().users.FirstOrDefault(someuser => someuser.email == mail) is null ? true : false;
-            return flag;
-        }
+        
 
         private void Nick_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -164,6 +154,28 @@ namespace InstaArt
                 Repeatpass.Text = "Повторите пароль";
                 Repeatpass.Style = (Style)FindResource("NoFocused");
             }
+        }
+
+        private void HideWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void SetFullScreen_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+                WindowState = WindowState.Normal;
+            else WindowState = WindowState.Maximized;
+        }
+
+        private void CloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }

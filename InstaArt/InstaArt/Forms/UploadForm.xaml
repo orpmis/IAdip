@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InstaArt"
         mc:Ignorable="d"
-        Title="UploadForm" Height="600" Width="700" ResizeMode="NoResize">
+        Title="UploadForm" Height="600" Width="700" ResizeMode="NoResize"
+        Background="#343337">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
@@ -22,8 +23,18 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <TextBox Name="PhotoName" Margin="10"/>
-            <TextBox Name="PhotoDescriprion" Margin="10" Grid.Column="1" Grid.RowSpan="2"/>
+            <TextBox Name="PhotoName" 
+                     Margin="10"
+                     Style="{StaticResource Focused}"
+                     Width="Auto"
+                     Height="Auto"/>
+            <TextBox Name="PhotoDescriprion" 
+                     Margin="10" 
+                     Grid.Column="1"
+                     Grid.RowSpan="2"
+                     Style="{StaticResource Focused}"
+                     Width="Auto"
+                     Height="Auto"/>
             <ComboBox Name="PhotoPlace"
                       Margin="10"
                       Grid.Row="1"
@@ -32,10 +43,16 @@
                       SelectedIndex="0"/>
 
         </Grid>
-        <Image Name="PreviewImage" Margin="15" Width="533" Height="300"/>
+        <Image Name="PreviewImage"
+               Margin="15" 
+               Width="533" 
+               Height="300"/>
         <Button Grid.Row="2"
                 Name="UploadButton"
                 Margin="15"
-                Content="Загрузить"/>
+                Content="Загрузить"
+                 Width="250"
+                Height="50" 
+                Style="{StaticResource RoundedFunctionalButton}"/>
     </Grid>
 </Window>

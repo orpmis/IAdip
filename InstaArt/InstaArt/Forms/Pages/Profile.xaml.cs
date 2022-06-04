@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using InstaArt.Forms.Pages;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using InstaArt.DataBaseControlClasses;
+using InstaArt.DbModel;
 
 namespace InstaArt
 {
@@ -41,57 +44,96 @@ namespace InstaArt
             SessionManager.currentFolder = null;
             SelectedUser = User;
 
+            OtherProfile();
+
             Nick.Text = SelectedUser.nickname;
             Status.Text = SelectedUser.status;
+            Avatar.Fill = GUI.ViewAvatar(User.photos1);
 
             AddSearchParametr_Click(null, null);
             filter[0].DeclareFunction(SearchAsync);
 
-            RefreshPhotos();
+            RefreshContent();
         }
-
-        private void UpdateInterface(bool onlyPhotos = false)
+        public void OtherProfile()
         {
-            if (SessionManager.currentFolder != null) BackButton.Visibility = Visibility.Visible;
-            else BackButton.Visibility = Visibility.Hidden;
+            if (SelectedUser != SessionManager.currentUser)
+            {
+                AddPhoto.Visibility = Visibility.Collapsed;
+                AddFolder.Visibility = Visibility.Collapsed;
+                RedactUserInfo.Visibility = Visibility.Collapsed;
+            }
+        }
+        public void UpdateInterface(bool onlyPhotos = false)
+        {
+            if (SessionManager.currentFolder != null)
+            {
+                BackButton.Visibility = Visibility.Visible;
+                RootButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BackButton.Visibility = Visibility.Hidden;
+                RootButton.Visibility = Visibility.Hidden;
+            }
             if(!onlyPhotos) UserFolderList.Children.RemoveRange(1, UserFolderList.Children.Count - 1);
             UserPhotoList.Children.RemoveRange(1, UserPhotoList.Children.Count - 1);
         }
-        public async void RefreshPhotos()
+        public async void RefreshContent()
         {
             UpdateInterface();
 
-            userPhoto = await DataBase.GetUserPhotos(SelectedUser.id, SessionManager.currentFolder);
+            userPhoto = await UsersManager.GetUserPhotosInFolder(SelectedUser.id, SessionManager.currentFolder);
 
             foreach (users_photo userPhoto in userPhoto)
             {
-                if (userPhoto.photos.isFolder == 0) UserPhotoList.Children.Add(GUI.ViewPhoto(userPhoto.photos));
+                if (userPhoto.photos.isFolder == 0)
+                {
+                    Image photoView = GUI.ViewPhoto(userPhoto.photos);
+                    UserPhotoList.Children.Add(photoView);
+                    photoView.MouseDown += (s, e) =>
+                    {
+                        SessionManager.MainFrame.Navigate(new PhotoShowingPage(userPhoto.photos));
+                    };
+                }
                 else
                 {
-                    UserFolderList.Children.Add(GUI.ViewFolder(userPhoto.photos));
+                    Border folderView = GUI.ViewFolder(userPhoto.photos);
+                        folderView.MouseDown += (s, e) =>
+                        {
+                            SessionManager.currentFolder = userPhoto.photos.id;
+                            RefreshContent();
+                        };
+                    UserFolderList.Children.Add(folderView);
                 }
             }
-            List<users_photo> ds = DataBase.GetContext().users_photo.Where(Finding => Finding.id_user == SelectedUser.id && Finding.photos.root == SessionManager.currentFolder).ToList();
-            Console.WriteLine("AAAAAAAAAAAA THERE IS " + ds.Count);
         }
 
-        public void RefreshPhotos(List<users_photo> viewingCollection)
+        public void RefreshPhotosOnly(List<users_photo> viewingCollection)
         {
             UpdateInterface(true);
 
             foreach (users_photo userPhoto in viewingCollection)
             {
-                if (userPhoto.photos.isFolder == 0) UserPhotoList.Children.Add(GUI.ViewPhoto(userPhoto.photos));
+                if (userPhoto.photos.isFolder == 0)
+                {
+                    Image view = GUI.ViewPhoto(userPhoto.photos);
+                    UserPhotoList.Children.Add(view);
+                    view.MouseDown += (s, e) =>
+                    {
+                        SessionManager.MainFrame.Navigate(new PhotoShowingPage(userPhoto.photos));
+                    };
+                }
             }
         }
 
         private void CanInsertNewSearchParametr()
         {
             AddSearchParametr.Visibility = Visibility.Visible;
-            if (SearchPart.Children.Count >= parametrs.Count+1) AddSearchParametr.Visibility = Visibility.Hidden;
+            if (filter.Count >= parametrs.Count) AddSearchParametr.Visibility = Visibility.Hidden;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void AddPhoto_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == true)
@@ -100,30 +142,35 @@ namespace InstaArt
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void AddFolder_Click(object sender, RoutedEventArgs e)
         {
             FolderCreate fc = new FolderCreate();
             fc.Show();
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private async void BackButton_click(object sender, RoutedEventArgs e)
         {
-            SessionManager.currentFolder = DataBase.GoBackFrom(SessionManager.currentFolder).Result;
-            RefreshPhotos();
+            SessionManager.currentFolder = await FolderNavigation.GoBackFrom(SessionManager.currentFolder);
+            RefreshContent();
+        }
+
+        private void RootButton_Click(object sender, RoutedEventArgs e)
+        {
+            SessionManager.currentFolder = null;
+            RefreshContent();
         }
 
         private void AddSearchParametr_Click(object sender, RoutedEventArgs e)
         {
-            CanInsertNewSearchParametr();
-
             SearchBlock newParametr = new SearchBlock(parametrs);
+            newParametr.index = filter.Count;
             filter.Add(newParametr);
 
-            SearchPart.RowDefinitions.Add(new RowDefinition());
-            Grid.SetRow(AddSearchParametr, SearchPart.RowDefinitions.Count - 1);
-
             SearchPart.Children.Add(newParametr.mainGrid);
-            Grid.SetRow(newParametr.mainGrid, SearchPart.RowDefinitions.Count-2);
+
+            newParametr.DeclareFunction(DeleteParametr);
+
+            CanInsertNewSearchParametr();
         }
 
         public async void SearchAsync()
@@ -132,16 +179,33 @@ namespace InstaArt
             string name = null;
             DateTime? date = null;
 
-            for (int i = 0; i < SearchPart.Children.Count - 1; i++)
+            for (int i = 0; i < filter.Count; i++)
             {
-                if (filter[i].GetParametr().name == "Дата") date = filter[i].GetValue();
-                if (filter[i].GetParametr().name == "Название") name = filter[i].GetValue();
+                if (filter[i].GetParametr().Name == "Дата") date = filter[i].GetValue();
+                if (filter[i].GetParametr().Name == "Название") name = filter[i].GetValue();
             }
 
-            if (date != null) selected = await DataBase.FindUserPhotoByDate(date.Value, SelectedUser.id, SessionManager.currentFolder, selected);
-            if(name != null) selected = await DataBase.FindUserPhotoByName(name, SelectedUser.id, SessionManager.currentFolder, selected);
+            selected = await FindAndSorting.FindUserPhotoByParametrs(SelectedUser.id, SessionManager.currentFolder, name, date, selected);
 
-            RefreshPhotos(selected);
+            RefreshPhotosOnly(selected);
+        }
+
+        public void DeleteParametr(int index)
+        {
+            filter.RemoveAt(index);
+            SearchPart.Children.RemoveAt(index);
+
+            for (int i = index; i < filter.Count; i++)
+            {
+                filter[i].index--;
+            }
+
+            CanInsertNewSearchParametr();
+        }
+
+        private void RedactUserInfo_Click(object sender, RoutedEventArgs e)
+        {
+            SessionManager.MainFrame.Navigate(new ProfileRedact());
         }
     }
 }

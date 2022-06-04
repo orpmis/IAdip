@@ -7,9 +7,16 @@
         mc:Ignorable="d"
         Title="MainForm" 
         MinHeight="500" 
-        MinWidth="950">
+        MinWidth="950"
+        Background="#343337"
+        ResizeMode="CanResizeWithGrip"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -17,28 +24,87 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <Grid Background="#222126"/>
+
+        <Grid HorizontalAlignment="Stretch">
+            <Button Height="25"
+                    Width="25"
+                    HorizontalAlignment="Right"
+                    Content="X"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="White"
+                    Margin="0,0,0,0"
+                    Name="CloseApp"
+                    Click="CloseApp_Click"/>
+            
+            <Button Height="25"
+                    Width="25"
+                    HorizontalAlignment="Right"
+                    Content="O"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="White"
+                    Margin="0,0,30,0"
+                    Name="SetFullScreen"
+                    Click="SetFullScreen_Click"/>
+
+            <Button Height="25"
+                    Width="25"
+                    HorizontalAlignment="Right"
+                    Content="_"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="White"
+                    Margin="0,0,60,0"
+                    Name="HideWindow"
+                    Click="HideWindow_Click"/>
+        </Grid>
+
         <Frame Name="MainPage"
                NavigationUIVisibility="Hidden"
-               Grid.Row="1"
-               VerticalAlignment="Top"
-               Height="Auto"/>
+               Grid.Row="2"
+               VerticalAlignment="Stretch"
+               Height="Auto"
+               Navigated="MainPage_Navigated"/>
 
+        <Image Source="/images/backIcon.png"
+               Grid.Row="1"
+            Width="60"
+            Height="60"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            Name="BackButton"
+            MouseDown="BackButton_Click"
+               Margin="15,0,0,0"/>
+        
         <StackPanel Grid.ColumnSpan="2"
                     Grid.Column="0"
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
-            <Button Content="Профиль"
-                    Style="{StaticResource MainButton}"
-                    Click="Button_Click_1"/>
-            <Button Content="Группы"
-                    Style="{StaticResource MainButton}"
-                    Click="Button_Click_3"/>
-            <Button Content="Пользователи" Style="{StaticResource MainButton}"
-                    Click="Button_Click"/>
-            <Button Content="Выход"
-                    Style="{StaticResource MainButton}"
-                    Click="Button_Click_2"/>
+            
+            <Image  Source="/images/profileIcon.png"
+                    MouseDown="GoToProfile_Click"
+                    Name="GoToProfile"/>
+            <Image  Source="/images/messagerIcon.png"
+                    MouseDown="GoToMessages_Click"
+                    Name="GoToMessages"/>
+            <Image  Source="/images/groupsIcon.png"
+                    MouseDown="GoToGroupList_Click"
+                    Name="GoToGroupList"/>
+            <Image  Source="/images/usersIcon.png"
+                    MouseDown="GoToUserList_Click"
+                    Name="GoToUserList"/>
+            <Image  Source="/images/exitIcon.png"
+                    MouseDown="Exit_Click"
+                    Name="Exit"/>
         </StackPanel>
 
     </Grid>

@@ -5,24 +5,110 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InstaArt"
         mc:Ignorable="d"
-        Title="Registration" Height="550" Width="635" ResizeMode="NoResize">
+        Background="#343337"
+        Title="Registration"
+        Height="550" 
+        Width="635" 
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="0.8*"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="1.1*"/>
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Регистрация" Style="{StaticResource AR_text}"/>
-        <TextBox Text="Введите ник" Grid.Row="1" Name="Nick" Style="{StaticResource NoFocused}" GotFocus="Nick_GotFocus" LostFocus="Nick_LostFocus"/>
-        <TextBox Text="Введите почту" Grid.Row="2" Name="Email" Style="{StaticResource NoFocused}" GotFocus="Email_GotFocus" LostFocus="Email_LostFocus"/>
-        <TextBox Text="Введите пароль" Grid.Row="3" Name="Pass" Style="{StaticResource NoFocused}" GotFocus="Pass_GotFocus" LostFocus="Pass_LostFocus"/>
-        <TextBox Text="Повторите пароль" Grid.Row="4" Name="Repeatpass" Style="{StaticResource NoFocused}" GotFocus="Repeatpass_GotFocus" LostFocus="Repeatpass_LostFocus"/>
-        <Button Grid.Row="5" Content="Регистрация" FontSize="25" Width="250" Height="60" Click="Button_Click"/>
-        <TextBlock Grid.Row ="6" Text="Уже есть аккаунт?" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" />
+
+        <Grid HorizontalAlignment="Stretch">
+            <Button Height="25"
+                    Width="25"
+                    HorizontalAlignment="Right"
+                    Content="X"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="White"
+                    Margin="0,0,0,0"
+                    Name="CloseApp"
+                    Click="CloseApp_Click"/>
+
+            <Button Height="25"
+                    Width="25"
+                    HorizontalAlignment="Right"
+                    Content="O"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="White"
+                    Margin="0,0,30,0"
+                    Name="SetFullScreen"
+                    Click="SetFullScreen_Click"/>
+
+            <Button Height="25"
+                    Width="25"
+                    HorizontalAlignment="Right"
+                    Content="_"
+                    FontSize="16"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Background="Transparent"
+                    Foreground="White"
+                    Margin="0,0,60,0"
+                    Name="HideWindow"
+                    Click="HideWindow_Click"
+                    Panel.ZIndex="1"/>
+        </Grid>
+
+
+        <TextBlock Text="Регистрация" 
+                   Style="{StaticResource AR_text}"
+                   Grid.Row="1"/>
+        <TextBox Text="Введите ник" 
+                 Grid.Row="2"
+                 Name="Nick" 
+                 Style="{StaticResource NoFocused}" 
+                 GotFocus="Nick_GotFocus" 
+                 LostFocus="Nick_LostFocus"/>
+        <TextBox Text="Введите почту" 
+                 Grid.Row="3" 
+                 Name="Email"
+                 Style="{StaticResource NoFocused}"
+                 GotFocus="Email_GotFocus"
+                 LostFocus="Email_LostFocus"/>
+        <TextBox Text="Введите пароль" 
+                 Grid.Row="4" 
+                 Name="Pass" 
+                 Style="{StaticResource NoFocused}" 
+                 GotFocus="Pass_GotFocus" 
+                 LostFocus="Pass_LostFocus"/>
+        <TextBox Text="Повторите пароль" 
+                 Grid.Row="5"
+                 Name="Repeatpass" 
+                 Style="{StaticResource NoFocused}" 
+                 GotFocus="Repeatpass_GotFocus" 
+                 LostFocus="Repeatpass_LostFocus"/>
+        <Button Grid.Row="6" 
+                Content="Регистрация"
+                FontSize="25"
+                Width="250" 
+                Height="60" 
+                Click="Button_Click"
+                Style="{StaticResource RoundedFunctionalButton}"/>
+        <TextBlock Grid.Row ="7" 
+                   Text="Уже есть аккаунт?" 
+                   FontSize="15" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" 
+                   MouseDown="TextBlock_MouseDown" 
+                   Foreground="White"/>
         
     </Grid>
 </Window>

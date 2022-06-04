@@ -26,29 +26,54 @@ namespace InstaArt
 
         public static string Upload(string filePath, string filename, string contentType, string parent)
         {
-            
-            Google.Apis.Drive.v3.Data.File newFile = new Google.Apis.Drive.v3.Data.File();
-            newFile.Name = filename;
-
-            newFile.Parents = new List<string> { GetFolderId(parent) };
-            
-            FilesResource.CreateMediaUpload UploadRequest;
-
-            using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))//Загружаем файл
+            try
             {
-                UploadRequest = drive.Files.Create(newFile, stream, contentType);
-                UploadRequest.Upload();
+                Google.Apis.Drive.v3.Data.File newFile = new Google.Apis.Drive.v3.Data.File();
+                newFile.Name = filename;
+
+                newFile.Parents = new List<string> { GetFolderId(parent) };
+
+                FilesResource.CreateMediaUpload UploadRequest;
+
+                using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))//Загружаем файл
+                {
+                    UploadRequest = drive.Files.Create(newFile, stream, contentType);
+                    UploadRequest.Upload();
+                }
+
+                newFile = GetFileByName(filename); //Получаем только что загруженный файл
+
+                Permission newFilePermission = new Permission { Type = "anyone", Role = "reader" };//Задаем права дсотупа
+                drive.Permissions.Create(newFilePermission, newFile.Id).Execute();
+
+                string newFileUri = "https://drive.google.com/uc?export=view&id=" + newFile.Id; //Создаем прямую ссылку на изображение
+
+                return newFileUri;
             }
-
-            newFile = GetFileByName(filename); //Получаем только что загруженный файл
-            
-            Permission newFilePermission = new Permission { Type = "anyone", Role = "reader"};//Задаем права дсотупа
-            drive.Permissions.Create(newFilePermission, newFile.Id).Execute();
-            
-            string newFileUri = "https://drive.google.com/uc?export=view&id=" + newFile.Id; //Создаем прямую ссылку на изображение
-
-            return newFileUri;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка обращения в Google Drive " + ex.ToString());
+                return null;
+            }
         }
+
+        public static bool Delete(string fileID)
+        {
+            try
+            {
+                FilesResource.DeleteRequest deleteRequest;
+
+                deleteRequest = drive.Files.Delete(fileID);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка обращения в Google Drive " + ex.ToString());
+                return false;
+            }
+        }
+
         private static void IsRootFolderExist()
         {
             FilesResource.ListRequest request = drive.Files.List();
@@ -91,6 +116,7 @@ namespace InstaArt
             if (!Directory.Exists(credPath))
             {
                 MessageBox.Show("Похоже вы пытаетесь зайти с другого устройства, войдите на свой гугл аккаунт на этом устройстве и разрешите доступ для приложения");
+                return;
             }
             credential = RegistrateCredential(id);
             drive = GetService(credential);
