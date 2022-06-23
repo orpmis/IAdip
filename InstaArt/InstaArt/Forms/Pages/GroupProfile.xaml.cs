@@ -26,6 +26,7 @@ namespace InstaArt
     {
         private group selectedGroup;
         private List<group_photo> groupPhotos;
+        private subs subStatus;
 
         private List<SearchBlock> filter = new List<SearchBlock>();
         private List<SearchParametr> parametrs;
@@ -33,6 +34,10 @@ namespace InstaArt
         public GroupProfile(group Group)
         {
             InitializeComponent();
+
+            selectedGroup = Group;
+
+            MemberInterface();
 
             parametrs = new List<SearchParametr>
             {
@@ -43,15 +48,48 @@ namespace InstaArt
             SessionManager.currentGroup = this;
             SessionManager.currentFolder = null;
 
-            selectedGroup = Group;
-
             GroupName.Text = selectedGroup.name;
             GroupShortDescription.Text = selectedGroup.short_descp;
+            GroupPreview.Fill = GUI.ViewAvatar(selectedGroup.photos);
 
             AddSearchParametr_Click(null, null);
             filter[0].DeclareFunction(SearchAsync);
 
             RefreshPhotos();
+        }
+
+        public async void MemberInterface()
+        {
+            subStatus = await GroupManager.GetUserSubscribeRole(selectedGroup, SessionManager.currentUser);
+            int roleID = (subStatus != null) ? subStatus.id_role : 0;
+
+            switch (roleID)
+            {
+                case 0:
+                    AddPhoto.Visibility = Visibility.Collapsed;
+                    AddFolder.Visibility = Visibility.Collapsed;
+
+                    SubscribeButton.Content = "Подписаться";
+                    SubscribeButton.Click -= UnSubscribe_Click;
+                    SubscribeButton.Click += SubscribeButton_Click;
+                    break;
+
+                case 1:
+                    AddFolder.Visibility = Visibility.Collapsed;
+                    break;
+
+                case 2:
+
+                    break;
+
+                case 3:
+                    break;
+
+                case 4:
+                    SubscribeButton.Visibility = Visibility.Collapsed;
+                    break;
+            }
+            
         }
 
         public void UpdateInterface(bool onlyPhotos = false)
@@ -132,7 +170,7 @@ namespace InstaArt
             CanInsertNewSearchParametr();
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_click(object sender, RoutedEventArgs e)
         {
             SessionManager.currentFolder = DataBase.GetContext().photos.Where(Finding => Finding.id == SessionManager.currentFolder).FirstOrDefault().root;
             RefreshPhotos();
@@ -188,6 +226,18 @@ namespace InstaArt
             }
 
             CanInsertNewSearchParametr();
+        }
+
+        private async void SubscribeButton_Click(object sender, RoutedEventArgs e)
+        {
+            await GroupManager.AddSubscriber(selectedGroup, SessionManager.currentUser);
+            MemberInterface();
+        }
+
+        private async void UnSubscribe_Click(object s, RoutedEventArgs e)
+        {
+            await GroupManager.RemoveSubscriber(subStatus);
+            MemberInterface();
         }
     }
 }

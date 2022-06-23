@@ -27,5 +27,15 @@ namespace InstaArt.DataBaseControlClasses
         {
             return await DataBase.DeleteMessage(onDelete);
         }
+
+        public static async Task<conversation> IsDialogExist(users user1, users user2)
+        {
+            return await DataBase.IsDialogExist(user1, user2);
+        }
+
+        public static async Task<conversation> CreateDialog(users otherConvMember)
+        {
+            return await DataBase.CreateDialog(otherConvMember);
+        }
     }
 }

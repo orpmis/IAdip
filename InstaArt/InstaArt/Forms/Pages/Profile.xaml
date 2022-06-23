@@ -18,11 +18,17 @@
             <ColumnDefinition Width="0.32*"/>
         </Grid.ColumnDefinitions>
 
+        <Border BorderBrush="#222126" 
+                BorderThickness="2" 
+                Grid.Column="0"
+                />
+
         <Grid x:Name="UserInfoPart">
             <Grid.RowDefinitions>
                 <RowDefinition Height="120"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -51,7 +57,7 @@
                 </Ellipse.Fill>
 
             </Ellipse>
-
+            
             <TextBlock Grid.Row="1" 
                        Text="Ник" 
                        FontSize="25" 
@@ -68,15 +74,25 @@
                        Name="Status"
                        Foreground="White"/>
 
+            <Button Name="DialogButton"
+                    Grid.Row="3"
+                    Margin="5"
+                    Height="50"
+                    Width="120"
+                    Style="{StaticResource RoundedFunctionalButton}"
+                    Content="Написать"
+                    Click="DialogButton_Click"
+                    Visibility="Collapsed"/>
+
             <StackPanel x:Name="SearchPart"
                         Orientation="Vertical"
-                        Grid.Row="3"
+                        Grid.Row="4"
                         Margin="5">
 
             </StackPanel>
 
             <Button Name="AddSearchParametr"
-                        Grid.Row="4"
+                        Grid.Row="5"
                         Width="200"
                         Height="40"
                         Margin="5"
@@ -131,7 +147,12 @@
             </ScrollViewer>
 
         </Grid>
-        
+
+        <Border BorderBrush="#222126" 
+                BorderThickness="2" 
+                Grid.Column="2"
+                />
+
         <ScrollViewer Name="UserFolderPart"
                       Grid.Column="2"
                       CanContentScroll="False" 

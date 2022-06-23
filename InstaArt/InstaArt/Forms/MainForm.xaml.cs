@@ -45,6 +45,7 @@ namespace InstaArt
 
         private void GoToProfile_Click(object sender, RoutedEventArgs e)
         {
+            SessionManager.currentProfile = new Profile(SessionManager.currentUser);
             MainPage.Navigate(SessionManager.currentProfile);
         }
 

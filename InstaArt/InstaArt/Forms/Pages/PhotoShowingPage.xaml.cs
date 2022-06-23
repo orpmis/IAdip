@@ -49,12 +49,12 @@ namespace InstaArt.Forms.Pages
 
             if (usersLike != null) await Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)delegate
             {
-                LikeButton.Source = new BitmapImage(new Uri("/images/heart_filled.png", UriKind.Relative));
+                LikeButton.Source = new BitmapImage(new Uri("/images/filledHeartIcon.png", UriKind.Relative));
             });
             else
                 await Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)delegate
                 {
-                    LikeButton.Source = new BitmapImage(new Uri("/images/heart.png", UriKind.Relative));
+                    LikeButton.Source = new BitmapImage(new Uri("/images/heartIcon.png", UriKind.Relative));
                 });
 
         }
@@ -103,9 +103,8 @@ namespace InstaArt.Forms.Pages
             CommentInputBox.Text = com.message;
             currentComment = com;
 
-            CommentUpload.Content = "Save";
-            CommentUpload.Click -= CommentUpload_Click;
-            CommentUpload.Click += CommentSave_Click;
+            CommentUpload.MouseDown -= CommentUpload_Click;
+            CommentUpload.MouseDown += CommentSave_Click;
         }
         private async Task<bool> SaveCommentRedaction(comments com)
         {
@@ -181,11 +180,27 @@ namespace InstaArt.Forms.Pages
         private void SetSendMode_Click(object sender, RoutedEventArgs e)
         {
             CommentInputBox.Text = string.Empty;
-            CommentUpload.Content = "Send";
-            CommentUpload.Click -= CommentSave_Click;
-            CommentUpload.Click += CommentUpload_Click;
+            CommentUpload.MouseDown -= CommentSave_Click;
+            CommentUpload.MouseDown += CommentUpload_Click;
 
             SetSendMode.Visibility = Visibility.Collapsed;
+        }
+
+        private async void DeleteButton_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBoxResult res = MessageBox.Show("Вы уверены, что хотите удалить фото?", "Удаление фото", MessageBoxButton.YesNo);
+
+            if (res == MessageBoxResult.Yes)
+            {
+                string photoID = await PhotoManager.DeletePhoto(selectedPhoto);
+                DriveAPI.Delete(photoID);
+                SessionManager.MainFrame.Navigate(new Profile(SessionManager.currentUser));
+            }
+        }
+
+        private void RedactPhotoInfo_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -36,9 +36,18 @@ namespace InstaArt.Forms.Pages
             ShowAllMessages(currentMessages);
         }
 
-        public async void RefreshMessages()
+        public async Task<bool> RefreshMessages()
         {
-            currentMessages = await MessagerManager.GetAllConversationMessages(currentConversation);
+            try
+            {
+                currentMessages = await MessagerManager.GetAllConversationMessages(currentConversation);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+           
         }
 
         public void ShowAllMessages(List<messages> showing)
@@ -104,8 +113,8 @@ namespace InstaArt.Forms.Pages
             selectedMessages.Clear();
             HideFuncs();
 
-            MessageUpload.Click -= RedactedMessageUpload_Click;
-            MessageUpload.Click += MessageUpload_Click;
+            MessageUpload.MouseDown -= RedactedMessageUpload_Click;
+            MessageUpload.MouseDown += MessageUpload_Click;
             MessageInputBox.TextInput += MessageInputBox_TextInput;
 
             MessageInputBox.Text = inputTextBuffer;
@@ -113,7 +122,8 @@ namespace InstaArt.Forms.Pages
 
         private async void MessageUpload_Click(object sender, RoutedEventArgs e)
         {
-            bool isFirst = currentMessages[currentMessages.Count - 1].id_sender != SessionManager.currentUser.id;
+            
+            bool isFirst =  (currentMessages.Count > 0) ? currentMessages[currentMessages.Count - 1].id_sender != SessionManager.currentUser.id : true;
             
             messages newMessage = new messages
             {
@@ -145,11 +155,16 @@ namespace InstaArt.Forms.Pages
                 
                 await MessagerManager.DeleteMessage(selectedMessages);
 
-                RefreshMessages();
+                if (await RefreshMessages())
+                {
+                    SetSendMode_Click(null, null);
 
-                SetSendMode_Click(null, null);
-
-                ShowAllMessages(currentMessages);
+                    ShowAllMessages(currentMessages);
+                }
+                else
+                {
+                    MessageBox.Show("Что-то пошло не так, перезапустите страницу");
+                }
             }
         }
 
@@ -157,8 +172,8 @@ namespace InstaArt.Forms.Pages
         {
             SetSendMode.Visibility = Visibility.Visible;
 
-            MessageUpload.Click -= MessageUpload_Click; 
-            MessageUpload.Click += RedactedMessageUpload_Click;
+            MessageUpload.MouseDown -= MessageUpload_Click; 
+            MessageUpload.MouseDown += RedactedMessageUpload_Click;
             MessageInputBox.TextInput -= MessageInputBox_TextInput;
 
             MessageInputBox.Text = selectedMessages[0].message;
@@ -167,11 +182,17 @@ namespace InstaArt.Forms.Pages
         private async void RedactedMessageUpload_Click(object sender, RoutedEventArgs e)
         {
             await MessagerManager.RedactMessage(selectedMessages[0], MessageInputBox.Text);
-            RefreshMessages();
+            if (await RefreshMessages())
+            {
+                SetSendMode_Click(null, null);
 
-            SetSendMode_Click(null, null);
+                ShowAllMessages(currentMessages);
+            }
 
-            ShowAllMessages(currentMessages);
+            else
+            {
+                MessageBox.Show("Что-то пошло не так, перезапустите страницу");
+            }
         }
 
         private void MessageInputBox_TextInput(object sender, TextCompositionEventArgs e)
@@ -186,7 +207,7 @@ namespace InstaArt.Forms.Pages
 
         public void ShowFuncs()
         {
-            MainGrid.RowDefinitions[0].Height = new GridLength(50, GridUnitType.Pixel);
+            MainGrid.RowDefinitions[0].Height = new GridLength(80, GridUnitType.Pixel);
         }
     }
 }

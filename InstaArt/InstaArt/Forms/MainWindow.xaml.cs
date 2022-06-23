@@ -52,7 +52,8 @@ namespace InstaArt
                     }
                     else MessageBox.Show("Неверный логин или пароль");
                 }
-                catch { MessageBox.Show("Ошибка обращения к диску, попробуйте еще раз" , "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
+                catch (Exception ex) 
+                { MessageBox.Show(ex.ToString()/*"Ошибка обращения к диску, попробуйте еще раз"*/ , "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
 
             }
             else MessageBox.Show("Введите все данные");

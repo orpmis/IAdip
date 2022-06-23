@@ -33,6 +33,7 @@ namespace InstaArt
             viewingUsers = usersCollection;
             RefreshItemsList(usersCollection);
             SearchButton.MouseDown += SearchButton_SearchUsers;
+            CreateGroup.Visibility = Visibility.Hidden;
         }
 
         public ListViewPage(List<group> groupsCollection)
@@ -47,14 +48,11 @@ namespace InstaArt
         public void RefreshItemsList(List<users> usersCollection)
         {
             ItemList.Children.Clear();
-            //ItemList.RowDefinitions.Clear();
+
             foreach (users u in usersCollection)
             {
-                //RowDefinition r = new RowDefinition();
-                //ItemList.RowDefinitions.Add(r);
                 Grid newUser = GUI.ViewUser(u);
                 ItemList.Children.Add(newUser);
-                //Grid.SetRow(newUser, ItemList.RowDefinitions.Count - 1);
 
             }
         }
@@ -62,14 +60,12 @@ namespace InstaArt
         public void RefreshItemsList(List<group> groupsCollection)
         {
             ItemList.Children.Clear();
-            //ItemList.RowDefinitions.Clear();
+
             foreach (group g in groupsCollection)
             {
                 RowDefinition r = new RowDefinition();
-               // ItemList.RowDefinitions.Add(r);
                 Grid newGroup = GUI.ViewGroup(g);
                 ItemList.Children.Add(newGroup);
-                //Grid.SetRow(newGroup, ItemList.RowDefinitions.Count - 1);
 
             }
         }

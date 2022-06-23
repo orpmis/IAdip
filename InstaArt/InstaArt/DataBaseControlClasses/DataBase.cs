@@ -93,6 +93,7 @@ namespace InstaArt
             GetContext().users.
                 Attach(exitingUser);
             exitingUser.last_online = DateTime.Now;
+            exitingUser.isOnline = 0;
             SaveChanges();
         }
 
@@ -178,6 +179,67 @@ namespace InstaArt
                 OrderByDescending(ord => ord.id).
                 ToList()
                 );
+        }
+
+        public static async Task<subs> GetUserSubscribeRole(group selectedGroup, users selectedUser)
+        {
+            subs userSubStatus = await Task.Run(
+                () =>
+                GetContext().
+                subs.
+                Where(finding => finding.id_user == selectedUser.id & finding.id_group == selectedGroup.id).
+                FirstOrDefault()
+                );
+
+            return userSubStatus;
+        }
+
+        public static async Task<bool> AddSubscriber(group selectedGroup, users selectedUser)
+        {
+            subs newSub = new subs
+            {
+                id_group = selectedGroup.id,
+                id_user = selectedUser.id,
+                id_role = 1
+            };
+
+            await Task.Run(
+               () =>
+               {
+                   newSub = GetContext().
+                   subs.
+                   Add(newSub);
+               }
+               );
+
+            if (newSub != null)
+            {
+                SaveChanges();
+                return true;
+            }
+            else return false;
+        }
+
+        public static async Task<bool> RemoveSubscriber(subs selectedSub)
+        {
+            await Task.Run(
+                () => GetContext().
+            subs.
+            Attach(selectedSub)
+            );
+
+            var removing = Task.Run(
+                () => GetContext().
+                subs.
+                Remove(selectedSub)
+                );
+
+            if (await removing != null)
+            {
+                SaveChanges();
+                return true;
+            }
+            else return false;
         }
 
         public static async Task<int?> GoBackFrom(int? folder)
@@ -310,6 +372,28 @@ namespace InstaArt
             else return onSearch;
         }
 
+        public static async Task<string> DeletePhoto(photos onDelete)
+        {
+            try
+            {
+                string photoID = onDelete.address.Replace("https://drive.google.com/uc?export=view&id=", "");
+
+                await Task.Run(
+                    () =>
+                    GetContext().
+                    photos.
+                    Remove(onDelete)
+                    );
+
+                SaveChanges();
+                return photoID;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return null;
+            }
+        }
         public static async Task<likes> GetUsersLike(int userId, int photoId)
         {
             await Task.Delay(200);
@@ -527,6 +611,71 @@ namespace InstaArt
                 );
         }
 
-        
+        public static async Task<conversation> IsDialogExist(users user1, users user2)
+        {
+            await Task.Delay(200);
+
+            return await Task.Run(
+                    () =>
+                    GetContext().
+                    conversation.
+                    Where(finding => finding.name == user1.id + "&" + user2.id || finding.name == user2.id + "&" + user1.id).
+                    FirstOrDefault()
+                    );
+        }
+
+        public static async Task<conversation> CreateDialog(users otherConvMember)
+        {
+            conversation newConv = new conversation
+            {
+                id_creator = SessionManager.currentUser.id,
+                date_start = DateTime.Now,
+                name = SessionManager.currentUser.id + "&" + otherConvMember.id
+            };
+
+            newConv = await Task.Run(
+                () =>
+                GetContext().
+                conversation.
+                Add(newConv)
+                );
+
+            SaveChanges();
+
+            await Task.Delay(200);
+
+            await AddMembersTOnewDialog(newConv, otherConvMember);
+
+            return newConv;
+        }
+
+        public static async Task<bool> AddMembersTOnewDialog(conversation newConv, users otherConvMember)
+        {
+            try
+            {
+                List<conversation_members> members = new List<conversation_members>
+                {
+                 new conversation_members { id_conversation = newConv.id, id_member = SessionManager.currentUser.id},
+                     new conversation_members  { id_conversation = newConv.id, id_member = otherConvMember.id }
+                };
+
+                await Task.Run(
+                    () =>
+                    {
+                        GetContext().
+                        conversation_members.
+                        AddRange(members);
+                    }
+                    );
+
+                SaveChanges();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

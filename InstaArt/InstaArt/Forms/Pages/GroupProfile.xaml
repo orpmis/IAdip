@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:InstaArt"
       mc:Ignorable="d" d:DesignWidth="950"
-      Title="GroupProfile" Height="Auto" Width="Auto" Background="White">
+      Title="GroupProfile" Height="Auto" Width="Auto" Background="Transparent">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -14,37 +14,46 @@
             <ColumnDefinition Width="0.35*"/>
         </Grid.ColumnDefinitions>
 
+        <Border BorderBrush="#222126" 
+                BorderThickness="2" 
+                Grid.Column="0"
+                />
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="150"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
-                <RowDefinition />
+                <RowDefinition Height="Auto"/>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <Image Name="GroupPreview">
-            </Image>
+            <Rectangle Name="GroupPreview">
+            </Rectangle>
 
             <TextBlock Grid.Row="1" Text="Название группы"
                        FontSize="25"
                        HorizontalAlignment="Center"
                        Margin="10,0,0,0"
-                       Name="GroupName"/>
+                       Name="GroupName"
+                       Foreground="White"/>
             
             <TextBlock Grid.Row="2" Text="Краткое описание группы"
                        FontSize="15"
                        VerticalAlignment="Top"
                        Margin="10,5,0,0"
+                       Foreground="White"
                        Name="GroupShortDescription"/>
 
             <Button Height="40"
                 Width="200"
-                Content="Подписаться"
+                Content="Отписаться"
                 HorizontalAlignment="Center"
                 Style="{StaticResource FunctionalButton}"
-                Grid.Row="3"/>
+                Grid.Row="3"
+                    Name="SubscribeButton"
+                    Click="UnSubscribe_Click"/>
 
             <Grid x:Name="SearchPart"
                   Grid.Row="4"
@@ -74,25 +83,21 @@
 
             <StackPanel HorizontalAlignment="Center"
                         Orientation="Horizontal">
-                <Button Height="40" 
+                <Image  Source="/images/backIcon.png"
+                        Height="40" 
                         Width="40" 
-                        Content="←"
-                        Click="BackButton_Click"
+                        MouseDown="BackButton_click"
                         Margin="0,5,0,5"
-                        FontSize="25"
-                        Style="{StaticResource RoundedFunctionalButton}"
                         Name="BackButton">
-                </Button>
-                <Button Height="40" 
-                        Width="40" 
-                        Content="R" 
-                        Click="RootButton_Click"
-                        Margin="15,5,0,5"
-                        FontSize="15"
-                        Style="{StaticResource RoundedFunctionalButton}"
+                </Image>
+                <Image  Source="/images/toRootIcon.png"
+                        Height="40" 
+                        Width="40"
+                        MouseDown="RootButton_Click"
+                        Margin="10,5,0,5"
                         Name="RootButton"/>
             </StackPanel>
-            
+
             <ScrollViewer Grid.Row="1"
                       CanContentScroll="False"
                       VerticalScrollBarVisibility="Auto" 
@@ -116,7 +121,10 @@
             </ScrollViewer>
         </Grid>
 
-
+        <Border BorderBrush="#222126" 
+                BorderThickness="2" 
+                Grid.Column="2"
+                />
         <ScrollViewer Name="GroupFolderPart"
                       Grid.Column="2"
                       VerticalScrollBarVisibility="Auto"

@@ -22,19 +22,23 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <TextBox Width="250"
+            <StackPanel Orientation="Horizontal">
+                <TextBox Width="300"
                      Name="NameBox"
                      Margin="5,0,0,0"
                      Style="{StaticResource Focused}"
                      HorizontalContentAlignment="Left"
+                     HorizontalAlignment="Stretch"
                      Grid.Column="0"
                      Height="50"/>
-            <Image Width="60"
+                <Image Width="60"
                     Height="60"
                     Name="SearchButton"
                     Margin="10,0,5,0"
                    HorizontalAlignment="Right"
                    Source="/images/searchIcon.png"/>
+            </StackPanel>
+            
             <Image  HorizontalAlignment="Right"
                     Name="CreateGroup"
                     Margin="10,0,0,0"

@@ -11,7 +11,7 @@
       Height="Auto" 
       Width="Auto" 
       Background="White">
-    
+
     <Grid Name="ContentField">
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -21,45 +21,95 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="0"/>
+            <ColumnDefinition Width="00"/>
         </Grid.ColumnDefinitions>
-        
+
+        <Grid Background="#343337" 
+              Grid.ColumnSpan="3"
+              Grid.Row="0"/>
+
+        <Grid Background="#343337" 
+              Grid.ColumnSpan="3"
+              Grid.Row="2"/>
+
+        <Grid Background="#343337" 
+              Grid.RowSpan="3"
+              Grid.Column="2"/>
+
+        <Grid Background="#343337" 
+              Grid.RowSpan="3"
+              Grid.Column="0"/>
+
         <Image Name="AnImage"
                Grid.Row="1"
                Margin="10"
                Grid.Column="1"
                Grid.RowSpan="1"/>
-        
+
         <TextBlock Name="PhotoName"
                    Style="{StaticResource AR_text}"
-                   Foreground="Black"
                    Text="Название фото"
                    Grid.ColumnSpan="3"/>
 
+        <Image Source="/images/trashCanIcon.png"
+                   x:Name="DeleteButton"
+                   MouseDown="DeleteButton_MouseDown"
+               Grid.ColumnSpan="3"
+                   VerticalAlignment="Center"
+               HorizontalAlignment="Right"
+                       Margin="0,0,5,0"
+                    Height="40"
+                   Width="40"/>
 
-        <TextBlock Name="Describtion"
-                   Grid.Row="1"
+        <Button x:Name="RedactPhotoInfo"
+                 Grid.ColumnSpan="3"
+                    Width="30"
+                    Height="30"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="0,0,55,0"
+                    Content="🖉"
+                    BorderBrush="Transparent"
+                    Background="Transparent"
+                    FontSize="20"
+                    Click="RedactPhotoInfo_Click"
+                    Style="{StaticResource RoundedFunctionalButton}"/>
+
+        <ScrollViewer Grid.Row="1" 
+                      VerticalScrollBarVisibility="Auto">
+
+            <TextBlock Name="Describtion"
                    Margin="10"
-                   Height="Auto"/>
+                   Height="Auto"
+                   Foreground="White"
+                   TextWrapping="Wrap"
+                   
+                       />
+
+        </ScrollViewer>
+
+
         <StackPanel Grid.Row="3"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
                     HorizontalAlignment="Center"
                     Margin="10"
-                    Orientation="Horizontal">
-            <Image Source="/images/heart.png"
+                    Orientation="Horizontal"
+                    Background="Transparent">
+
+            <Image Source="/images/heartIcon.png" 
                    Name="LikeButton"
                    MouseDown="LikeButton_MouseDown"/>
 
-            <Image Source="/images/commentsIcon.png"
+            <Image Source="/images/messagerIcon.png"
                        VerticalAlignment="Center"
-                       Margin="10,0,0,0"
+                       Margin="0,0,0,0"
                        Name="CommentsButton"
                    Height="60"
                    Width="60"
                        MouseDown="CommentsButton_Up"/>
 
-            <Image Source="/images/folder.png"
+            <Image Source="/images/descriptionIcon.png"
                    Name="DescriptionButton"
                    MouseDown="DescriptionButton_MouseDown"/>
 
@@ -67,7 +117,7 @@
 
         <Grid Grid.Row="1"
               Grid.Column="2"
-              Grid.RowSpan="2"
+              Grid.RowSpan="1"
               Width="Auto"
               Name="CommentArea">
 
@@ -83,22 +133,22 @@
                     <ColumnDefinition Width="70"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Name="CommentUpload"
+                <Image Name="CommentUpload"
                         Grid.Column="1"
                         Width="40"
                         Height="40"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Margin="10"
-                        Style="{StaticResource RoundedFunctionalButton}"
-                        Click="CommentUpload_Click"
-                            Content="Send"
-                            FontSize="16"
-                        Foreground="Black"
-                            BorderBrush="Black"/>
+                        Margin="0,10,0,0"
+                       Source="/images/toRootIcon.png"
+                        MouseDown="CommentUpload_Click"
+                        RenderTransformOrigin="0.5, 0.5">
 
-                    
-                    <Button Name="SetSendMode"
+                    <Image.RenderTransform>
+                        <ScaleTransform ScaleX="-1"/>
+                    </Image.RenderTransform>
+                </Image>
+
+
+                <Button Name="SetSendMode"
                             Width="20"
                             Height="20"
                             Content="-"
@@ -107,11 +157,9 @@
                             Margin="10,0,0,0"
                             HorizontalAlignment="Left"
                             Click="SetSendMode_Click"
-                            Visibility="Collapsed"
-                            Foreground="Black"
-                            BorderBrush="Black"/>
+                            Visibility="Collapsed"/>
 
-                    <TextBox Name="CommentInputBox"
+                <TextBox Name="CommentInputBox"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Stretch"
                              Width="Auto"
@@ -122,20 +170,17 @@
 
             </Grid>
 
-            <ScrollViewer Grid.Row="1">
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto">
                 <StackPanel Name="CommentsList"
                   Width="Auto"
                             Orientation="Vertical">
-
-                    <!--<Grid.RowDefinitions>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>-->
 
                 </StackPanel>
             </ScrollViewer>
 
         </Grid>
 
-       
+
     </Grid>
 </Page>

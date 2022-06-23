@@ -40,11 +40,16 @@ namespace InstaArt.Forms.Pages
 
                 conv.MouseDown += (s, e) =>
                 {
-                    DialogeZone.Navigate(new DialogPage(conversation));
+                    SelectDialog(conversation);
                 };
 
                 UserConversations.Children.Add(conv);
             }
+        }
+
+        public void SelectDialog(conversation conversation)
+        {
+            DialogeZone.Navigate(new DialogPage(conversation));
         }
 
     }

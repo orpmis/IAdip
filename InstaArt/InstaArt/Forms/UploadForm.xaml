@@ -34,7 +34,9 @@
                      Grid.RowSpan="2"
                      Style="{StaticResource Focused}"
                      Width="Auto"
-                     Height="Auto"/>
+                     Height="Auto"
+                     FontSize="10"
+                     TextWrapping="Wrap"/>
             <ComboBox Name="PhotoPlace"
                       Margin="10"
                       Grid.Row="1"

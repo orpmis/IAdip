@@ -56,10 +56,12 @@ namespace InstaArt
 
             Image folderIco = new Image
             {
-                Source = new BitmapImage(new Uri("/images/folder.png", UriKind.Relative)),
+                Source = new BitmapImage(new Uri("/images/folderIcon.png", UriKind.Relative)),
                 Stretch = Stretch.Uniform,
-                Height = 50,
-                Width = 50
+                Margin = new Thickness(0,0,0,0),
+                Height = 40,
+                Width = 40,
+                VerticalAlignment = VerticalAlignment.Center
             };
 
             TextBlock folderName = new TextBlock
@@ -243,14 +245,16 @@ namespace InstaArt
             {
                 Text = ViewingComment.users.nickname,
                 FontSize = 20,
-                Margin = new Thickness(0,20,0,0)
+                Margin = new Thickness(0,20,0,0),
+                Foreground = Brushes.White
             };
 
             TextBlock messageLabel = new TextBlock
             {
                 Text = ViewingComment.message,
                 FontSize = 15,
-                TextWrapping = TextWrapping.Wrap
+                TextWrapping = TextWrapping.Wrap,
+                Foreground = Brushes.White
             };
 
             Label dateLabel = new Label
@@ -259,7 +263,8 @@ namespace InstaArt
                 FontSize = 10,
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(0,0,10,0)
+                Margin = new Thickness(0,0,10,0),
+                Foreground = Brushes.White
             };
 
             if (ViewingComment.users.id == SessionManager.currentUser.id)
@@ -277,9 +282,7 @@ namespace InstaArt
                     Content = "🖉",
                     FontSize = 10,
                     Margin = new Thickness(0,0,0,0),
-                    Style = (Style)App.Current.FindResource("RoundedFunctionalButton"),
-                    BorderBrush = Brushes.Black,
-                    Foreground = Brushes.Black
+                    Style = (Style)App.Current.FindResource("RoundedFunctionalButton")
                 };
 
                 redactCommentButton.Click += (s, e) => { actionOnRedact(ViewingComment); };
@@ -355,16 +358,19 @@ namespace InstaArt
                 avatarView.Fill = ViewAvatar(companion.photos1);
 
                 convName = viewingConversation.name;
-                if (convName == null || convName == string.Empty)
+                if (convName == viewingConversation.id_creator + "&" + companion.id || convName == companion.id + "&" + viewingConversation.id_creator)
                 {
                     convName = companion.nickname;
                 }
 
-                if (viewingConversation.messages.Last().id_sender == SessionManager.currentUser.id)
+                if (viewingConversation.messages.Count > 0)
                 {
-                    lastMes = "Вы: ";
+                    if (viewingConversation.messages.Last().id_sender == SessionManager.currentUser.id)
+                    {
+                        lastMes = "Вы: ";
+                    }
+                    lastMes += viewingConversation.messages.Last().message;
                 }
-                lastMes += viewingConversation.messages.Last().message;
             }
 
             TextBlock nameLabel = new TextBlock

@@ -62,6 +62,7 @@ namespace InstaArt
                 AddPhoto.Visibility = Visibility.Collapsed;
                 AddFolder.Visibility = Visibility.Collapsed;
                 RedactUserInfo.Visibility = Visibility.Collapsed;
+                DialogButton.Visibility = Visibility.Visible;
             }
         }
         public void UpdateInterface(bool onlyPhotos = false)
@@ -206,6 +207,22 @@ namespace InstaArt
         private void RedactUserInfo_Click(object sender, RoutedEventArgs e)
         {
             SessionManager.MainFrame.Navigate(new ProfileRedact());
+        }
+
+        private async void DialogButton_Click(object sender, RoutedEventArgs e)
+        {
+            conversation usersDialog = await MessagerManager.IsDialogExist(SessionManager.currentUser, SelectedUser);
+            if (usersDialog != null)
+            {
+                Messager messagerPage = new Messager(await UsersManager.GetAllUsersConversations(SessionManager.currentUser));
+                messagerPage.SelectDialog(usersDialog);
+                SessionManager.MainFrame.Navigate(messagerPage);
+            }
+            else
+            {
+                await MessagerManager.CreateDialog(SelectedUser);
+                DialogButton_Click(sender, e);
+            }
         }
     }
 }

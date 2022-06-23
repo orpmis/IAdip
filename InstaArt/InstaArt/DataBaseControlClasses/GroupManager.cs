@@ -17,5 +17,20 @@ namespace InstaArt.DataBaseControlClasses
         {
             return await DataBase.GetGroupPhotosInFolder(selectedGroup, folder);
         }
+
+        public static async Task<subs> GetUserSubscribeRole(group selectedGroup, users selectedUser)
+        {
+            return await DataBase.GetUserSubscribeRole(selectedGroup, selectedUser);
+        }
+
+        public static async Task<bool> AddSubscriber(group selectedGroup, users selectedUser)
+        {
+            return await DataBase.AddSubscriber(selectedGroup, selectedUser);
+        }
+
+        public static async Task<bool> RemoveSubscriber(subs selectedSub)
+        {
+            return await DataBase.RemoveSubscriber(selectedSub);
+        }
     }
 }

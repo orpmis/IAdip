@@ -6,15 +6,15 @@
         xmlns:local="clr-namespace:InstaArt"
         mc:Ignorable="d"
         Title="MainForm" 
-        MinHeight="500" 
-        MinWidth="950"
+        MinHeight="550" 
+        MinWidth="1000"
         Background="#343337"
         ResizeMode="CanResizeWithGrip"
         WindowStyle="None"
         AllowsTransparency="True"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
-    <Grid>
+    <Grid Margin="3">
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition Height="80"/>
@@ -25,6 +25,11 @@
         </Grid.ColumnDefinitions>
 
         <Grid Background="#222126"/>
+
+        <Border BorderBrush="#222126" 
+                BorderThickness="2" 
+                Margin="0"
+                Grid.Row="1"/>
 
         <Grid HorizontalAlignment="Stretch">
             <Button Height="25"

@@ -9,6 +9,10 @@ namespace InstaArt.DataBaseControlClasses
 {
     public static class PhotoManager
     {
+        public static async Task<string> DeletePhoto(photos onDelete)
+        {
+            return await DataBase.DeletePhoto(onDelete);
+        }
         public static async Task<likes> GetUsersLike(int userId, int photoId)
         {
             return await DataBase.GetUsersLike(userId, photoId);

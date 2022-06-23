@@ -65,6 +65,8 @@ namespace InstaArt
 
                 deleteRequest = drive.Files.Delete(fileID);
 
+                deleteRequest.Execute();
+
                 return true;
             }
             catch (Exception ex)
@@ -116,7 +118,7 @@ namespace InstaArt
             if (!Directory.Exists(credPath))
             {
                 MessageBox.Show("Похоже вы пытаетесь зайти с другого устройства, войдите на свой гугл аккаунт на этом устройстве и разрешите доступ для приложения");
-                return;
+                //return;
             }
             credential = RegistrateCredential(id);
             drive = GetService(credential);
